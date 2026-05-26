@@ -70,6 +70,12 @@ Create an admin user from the project root:
 php database/create_admin.php admin@example.com "StrongPassword123!" "Super Admin"
 ```
 
+Seed the starter catalog:
+
+```bash
+php database/seed_catalog.php
+```
+
 Then open `http://localhost/gypsum-acoustic/public_html/admin/login`.
 
 ## Main Routes
@@ -86,6 +92,9 @@ Then open `http://localhost/gypsum-acoustic/public_html/admin/login`.
 - `/admin` - protected dashboard
 - `/admin/inquiries` - saved inquiries
 - `/admin/boqs` - saved calculator estimates
+- `/admin/brands` - brand management
+- `/admin/categories` - category management
+- `/admin/products` - product catalog management
 
 ## API Endpoints
 

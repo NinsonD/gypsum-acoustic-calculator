@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 final class AdminController extends Controller
 {
+    private ProductRepository $products;
+
+    public function __construct(array $config)
+    {
+        parent::__construct($config);
+        $this->products = new ProductRepository($config);
+    }
+
     public function login(): void
     {
         if (Auth::check($this->config)) {
@@ -67,6 +75,186 @@ final class AdminController extends Controller
         ]);
     }
 
+    public function brands(): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $edit = null;
+        if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
+            $edit = $this->products->brandById((int) $_GET['edit']);
+        }
+
+        $this->view('pages/admin-brands', [
+            'title' => 'Brands',
+            'description' => 'Manage product manufacturers and system brands.',
+            'user' => Auth::user($this->config),
+            'brands' => $this->products->brands(),
+            'edit' => $edit,
+            'success' => flash('success'),
+            'error' => flash('error'),
+        ]);
+    }
+
+    public function saveBrand(): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/brands');
+        }
+
+        try {
+            $this->products->saveBrand($data);
+            flash('success', 'Brand saved.');
+        } catch (Throwable $error) {
+            flash('error', $error->getMessage());
+        }
+
+        redirect_to('/admin/brands');
+    }
+
+    public function deleteBrand(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (verify_csrf($data['_csrf'] ?? null)) {
+            $this->products->deleteBrand((int) $id);
+            flash('success', 'Brand deleted.');
+        } else {
+            flash('error', 'Security token expired. Please try again.');
+        }
+
+        redirect_to('/admin/brands');
+    }
+
+    public function categories(): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $edit = null;
+        if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
+            $edit = $this->products->categoryById((int) $_GET['edit']);
+        }
+
+        $this->view('pages/admin-categories', [
+            'title' => 'Categories',
+            'description' => 'Manage product categories for gypsum, drywall, acoustic, and insulation systems.',
+            'user' => Auth::user($this->config),
+            'categories' => $this->products->categories(),
+            'edit' => $edit,
+            'success' => flash('success'),
+            'error' => flash('error'),
+        ]);
+    }
+
+    public function saveCategory(): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/categories');
+        }
+
+        try {
+            $this->products->saveCategory($data);
+            flash('success', 'Category saved.');
+        } catch (Throwable $error) {
+            flash('error', $error->getMessage());
+        }
+
+        redirect_to('/admin/categories');
+    }
+
+    public function deleteCategory(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (verify_csrf($data['_csrf'] ?? null)) {
+            $this->products->deleteCategory((int) $id);
+            flash('success', 'Category deleted.');
+        } else {
+            flash('error', 'Security token expired. Please try again.');
+        }
+
+        redirect_to('/admin/categories');
+    }
+
+    public function products(): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $this->view('pages/admin-products', [
+            'title' => 'Products',
+            'description' => 'Manage public catalog product systems.',
+            'user' => Auth::user($this->config),
+            'products' => $this->products->adminProducts(),
+            'success' => flash('success'),
+            'error' => flash('error'),
+        ]);
+    }
+
+    public function createProduct(): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $this->productForm(null);
+    }
+
+    public function editProduct(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $product = $this->products->productById((int) $id);
+
+        if ($product === null) {
+            flash('error', 'Product not found.');
+            redirect_to('/admin/products');
+        }
+
+        $this->productForm($product);
+    }
+
+    public function saveProduct(): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/products');
+        }
+
+        try {
+            $this->products->saveProduct($data);
+            flash('success', 'Product saved.');
+        } catch (Throwable $error) {
+            flash('error', $error->getMessage());
+        }
+
+        redirect_to('/admin/products');
+    }
+
+    public function deleteProduct(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (verify_csrf($data['_csrf'] ?? null)) {
+            $this->products->deleteProduct((int) $id);
+            flash('success', 'Product deleted.');
+        } else {
+            flash('error', 'Security token expired. Please try again.');
+        }
+
+        redirect_to('/admin/products');
+    }
+
     public function inquiries(): void
     {
         Auth::requireAdmin($this->config);
@@ -115,5 +303,18 @@ final class AdminController extends Controller
             'products' => (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn(),
             'downloads' => (int) $pdo->query('SELECT COUNT(*) FROM downloads')->fetchColumn(),
         ];
+    }
+
+    private function productForm(?array $product): void
+    {
+        $this->view('pages/admin-product-form', [
+            'title' => $product === null ? 'Create Product' : 'Edit Product',
+            'description' => 'Create or update catalog product data.',
+            'user' => Auth::user($this->config),
+            'product' => $product,
+            'brands' => $this->products->brands(),
+            'categories' => $this->products->categories(),
+            'error' => flash('error'),
+        ]);
     }
 }

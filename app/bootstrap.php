@@ -14,6 +14,7 @@ require APP_PATH . '/core/View.php';
 require APP_PATH . '/core/Controller.php';
 require APP_PATH . '/core/Router.php';
 require APP_PATH . '/models/ContentRepository.php';
+require APP_PATH . '/models/ProductRepository.php';
 require APP_PATH . '/controllers/PageController.php';
 require APP_PATH . '/controllers/AdminController.php';
 require APP_PATH . '/controllers/CalculatorController.php';

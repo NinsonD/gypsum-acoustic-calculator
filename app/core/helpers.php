@@ -39,6 +39,15 @@ function e(string|int|float|null $value): string
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 
+function slugify(string $value): string
+{
+    $value = strtolower(trim($value));
+    $value = preg_replace('/[^a-z0-9]+/i', '-', $value) ?? '';
+    $value = trim($value, '-');
+
+    return $value !== '' ? $value : 'item-' . date('YmdHis');
+}
+
 function app_config(?string $key = null, mixed $default = null): mixed
 {
     static $config = null;
@@ -97,6 +106,23 @@ function csrf_token(): string
 function verify_csrf(?string $token): bool
 {
     return is_string($token) && isset($_SESSION['_csrf']) && hash_equals($_SESSION['_csrf'], $token);
+}
+
+function flash(?string $key = null, ?string $value = null): mixed
+{
+    if ($key === null) {
+        return $_SESSION['_flash'] ?? [];
+    }
+
+    if ($value !== null) {
+        $_SESSION['_flash'][$key] = $value;
+        return null;
+    }
+
+    $message = $_SESSION['_flash'][$key] ?? null;
+    unset($_SESSION['_flash'][$key]);
+
+    return $message;
 }
 
 function partial(string $name, array $data = []): void

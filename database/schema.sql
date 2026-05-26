@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS products (
     category_id INT UNSIGNED NULL,
     name VARCHAR(180) NOT NULL,
     slug VARCHAR(200) NOT NULL UNIQUE,
+    short_description VARCHAR(255) NULL,
     description TEXT NULL,
     specifications JSON NULL,
     nrc_value VARCHAR(60) NULL,

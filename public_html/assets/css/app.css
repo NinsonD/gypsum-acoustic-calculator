@@ -444,6 +444,11 @@ th {
     color: #9a1c1c;
 }
 
+.notice.success {
+    background: var(--mint-100);
+    color: var(--mint-600);
+}
+
 .login-shell {
     display: grid;
     min-height: 60vh;
@@ -480,6 +485,34 @@ th {
 
 .admin-actions form {
     margin: 0;
+}
+
+.admin-crud-grid {
+    align-items: start;
+}
+
+.admin-top-actions {
+    margin: 0 0 18px;
+}
+
+.admin-product-form {
+    display: grid;
+    gap: 16px;
+}
+
+.table-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.table-actions form {
+    margin: 0;
+}
+
+.button.danger {
+    border-color: #ffc6c6;
+    color: #9a1c1c;
 }
 
 .is-hidden {

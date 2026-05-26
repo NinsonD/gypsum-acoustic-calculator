@@ -5,11 +5,13 @@ declare(strict_types=1);
 final class PageController extends Controller
 {
     private ContentRepository $content;
+    private ProductRepository $products;
 
     public function __construct(array $config)
     {
         parent::__construct($config);
         $this->content = new ContentRepository();
+        $this->products = new ProductRepository($config);
     }
 
     public function home(): void
@@ -17,7 +19,7 @@ final class PageController extends Controller
         $this->view('pages/home', [
             'title' => 'Gypsum & Acoustic Engineering Systems',
             'description' => 'Gypsum ceiling, drywall partition, acoustic calculator, BOQ, and contractor lead platform.',
-            'products' => array_slice($this->content->products(), 0, 3),
+            'products' => array_slice($this->catalogProducts(), 0, 3),
         ]);
     }
 
@@ -31,21 +33,22 @@ final class PageController extends Controller
 
     public function products(): void
     {
-        $products = array_map(function (array $product): array {
-            $product['brand'] = $this->content->brandById($product['brand_id']);
-            return $product;
-        }, $this->content->products());
-
         $this->view('pages/products', [
             'title' => 'Product Catalog',
             'description' => 'Gypsum, drywall, acoustic, insulation, and soundproofing system catalog.',
-            'products' => $products,
+            'products' => $this->catalogProducts(),
         ]);
     }
 
     public function productDetail(string $slug): void
     {
-        $product = $this->content->productBySlug($slug);
+        $product = null;
+
+        try {
+            $product = $this->products->productBySlug($slug);
+        } catch (Throwable) {
+            $product = $this->content->productBySlug($slug);
+        }
 
         if ($product === null) {
             http_response_code(404);
@@ -108,5 +111,22 @@ final class PageController extends Controller
             'title' => 'Page Not Found',
             'description' => 'The requested page could not be found.',
         ]);
+    }
+
+    private function catalogProducts(): array
+    {
+        try {
+            $products = $this->products->publicProducts();
+
+            if (count($products) > 0) {
+                return $products;
+            }
+        } catch (Throwable) {
+        }
+
+        return array_map(function (array $product): array {
+            $product['brand'] = $this->content->brandById($product['brand_id']);
+            return $product;
+        }, $this->content->products());
     }
 }

@@ -15,7 +15,7 @@
 </section>
 
 <section class="card-grid four">
-    <article class="card"><h2>Products</h2><p>Next CRUD module for brands, categories, specs, images, NRC, STC, and fire ratings.</p></article>
+    <article class="card"><h2>Products</h2><p>Manage brands, categories, specs, images, NRC, STC, and fire ratings.</p><a href="<?= e(url('/admin/products')); ?>">Open products</a></article>
     <article class="card"><h2>Blogs</h2><p>Next SEO module for gypsum ceiling UAE, drywall Dubai, and acoustic content pages.</p></article>
     <article class="card"><h2>Downloads</h2><p>Next file module for datasheets, BOQ templates, CAD files, and method statements.</p></article>
     <article class="card"><h2>Users</h2><p>Next user module for admin, editor, contractor, and permission management.</p></article>

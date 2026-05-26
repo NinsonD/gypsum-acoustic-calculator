@@ -1,0 +1,1 @@
+ALTER TABLE products ADD COLUMN IF NOT EXISTS short_description VARCHAR(255) NULL AFTER slug;
