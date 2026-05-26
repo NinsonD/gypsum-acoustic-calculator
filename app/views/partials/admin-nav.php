@@ -1,4 +1,5 @@
 <div class="admin-actions">
+    <?php $config = $config ?? app_config(); ?>
     <a class="button <?= ($active ?? '') === 'dashboard' ? 'primary' : ''; ?>" href="<?= e(url('/admin')); ?>">Dashboard</a>
     <?php if (Auth::hasPermission($config, 'leads')): ?>
         <a class="button <?= ($active ?? '') === 'inquiries' ? 'primary' : ''; ?>" href="<?= e(url('/admin/inquiries')); ?>">Inquiries</a>

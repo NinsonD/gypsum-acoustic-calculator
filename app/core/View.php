@@ -37,6 +37,10 @@ final class View
             return;
         }
 
+        if (!array_key_exists('config', $data)) {
+            $data['config'] = app_config();
+        }
+
         extract($data, EXTR_SKIP);
         require $path;
     }
