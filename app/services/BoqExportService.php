@@ -93,7 +93,7 @@ final class BoqExportService
                 'category' => (string) ($row['category'] ?? ''),
                 'name' => (string) ($row['name'] ?? ''),
                 'unit' => (string) ($row['unit'] ?? ''),
-                'qty' => $this->formatNumber($row['qty'] ?? ''),
+                'qty' => $this->formatQuantity($row['qty'] ?? ''),
                 'notes' => (string) ($row['notes'] ?? ''),
             ];
         }
@@ -221,5 +221,14 @@ final class BoqExportService
 
         $formatted = number_format((float) $value, 6, '.', '');
         return rtrim(rtrim($formatted, '0'), '.');
+    }
+
+    private function formatQuantity(mixed $value): string
+    {
+        if (!is_numeric($value)) {
+            return (string) $value;
+        }
+
+        return (string) max(0, (int) round((float) $value));
     }
 }

@@ -15,7 +15,23 @@
         return Math.round((value + Number.EPSILON) * 100) / 100;
     }
 
+    function roundQty(value) {
+        if (!Number.isFinite(value)) {
+            return 0;
+        }
+
+        return Math.round(value);
+    }
+
     function formatQty(value) {
+        if (!Number.isFinite(value)) {
+            return '';
+        }
+
+        return String(roundQty(value));
+    }
+
+    function formatMeasure(value) {
         if (!Number.isFinite(value)) {
             return '';
         }
@@ -29,12 +45,12 @@
     }
 
     function item(category, name, unit, qty, notes) {
-        return { category: category, name: name, unit: unit, qty: qty, notes: notes };
+        return { category: category, name: name, unit: unit, qty: roundQty(qty), notes: notes };
     }
 
     function ceiling(form) {
         var area = number(form, 'ceiling_area', 12);
-        var boardCount = area / 2.88;
+        var boardCount = roundQty(area / 2.88);
 
         return {
             type: 'ceiling',
@@ -65,7 +81,7 @@
     function partition(form) {
         var area = number(form, 'partition_area', 293);
         var glasswool = form.elements.partition_glasswool && form.elements.partition_glasswool.checked;
-        var boardCount = area / 2.88;
+        var boardCount = roundQty(area / 2.88);
 
         var items = [
             item('Boards', 'Gypsum Board 1.2 x 2.4mtrs', 'pcs', boardCount, 'Area / 2.88'),
@@ -176,7 +192,7 @@
         var summary = root.querySelector('[data-summary]');
         var body = root.querySelector('[data-boq-body]');
         summary.innerHTML = result.summary.map(function (row) {
-            return '<div class="summary-item"><span>' + row[0] + '</span><strong>' + formatQty(row[1]) + '</strong><small>' + row[2] + '</small></div>';
+            return '<div class="summary-item"><span>' + row[0] + '</span><strong>' + formatMeasure(row[1]) + '</strong><small>' + row[2] + '</small></div>';
         }).join('');
 
         body.innerHTML = result.items.map(function (row) {
