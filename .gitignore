@@ -4,6 +4,8 @@ node_modules
 .next
 storage/logs/*
 !storage/logs/.gitkeep
+storage/backups/*
+!storage/backups/.gitkeep
 public_html/uploads/*
 !public_html/uploads/.gitkeep
 *.zip
