@@ -13,11 +13,12 @@
     <div class="summary-item"><span>Products</span><strong><?= e($stats['products'] ?? 0); ?></strong><small>database records</small></div>
     <div class="summary-item"><span>Blogs</span><strong><?= e($stats['blogs'] ?? 0); ?></strong><small>published articles</small></div>
     <div class="summary-item"><span>Downloads</span><strong><?= e($stats['downloads'] ?? 0); ?></strong><small>resource records</small></div>
+    <div class="summary-item"><span>Users</span><strong><?= e($stats['users'] ?? 0); ?></strong><small>admin accounts</small></div>
 </section>
 
 <section class="card-grid four">
-    <article class="card"><h2>Products</h2><p>Manage brands, categories, specs, images, NRC, STC, and fire ratings.</p><a href="<?= e(url('/admin/products')); ?>">Open products</a></article>
-    <article class="card"><h2>Blogs</h2><p>Manage SEO articles for gypsum ceiling UAE, drywall Dubai, and acoustic content pages.</p><a href="<?= e(url('/admin/blogs')); ?>">Open blogs</a></article>
-    <article class="card"><h2>Downloads</h2><p>Next file module for datasheets, BOQ templates, CAD files, and method statements.</p></article>
-    <article class="card"><h2>Users</h2><p>Next user module for admin, editor, contractor, and permission management.</p></article>
+    <?php if (Auth::hasPermission($config, 'products')): ?><article class="card"><h2>Products</h2><p>Manage brands, categories, specs, images, NRC, STC, and fire ratings.</p><a href="<?= e(url('/admin/products')); ?>">Open products</a></article><?php endif; ?>
+    <?php if (Auth::hasPermission($config, 'blog')): ?><article class="card"><h2>Blogs</h2><p>Manage SEO articles for gypsum ceiling UAE, drywall Dubai, and acoustic content pages.</p><a href="<?= e(url('/admin/blogs')); ?>">Open blogs</a></article><?php endif; ?>
+    <?php if (Auth::hasPermission($config, 'downloads')): ?><article class="card"><h2>Downloads</h2><p>Manage datasheets, BOQ templates, CAD files, and method statements.</p><a href="<?= e(url('/admin/downloads')); ?>">Open downloads</a></article><?php endif; ?>
+    <?php if (Auth::hasPermission($config, 'users')): ?><article class="card"><h2>Users</h2><p>Manage admin, editor, and contractor accounts and permissions.</p><a href="<?= e(url('/admin/users')); ?>">Open users</a></article><?php endif; ?>
 </section>

@@ -17,6 +17,7 @@ require APP_PATH . '/models/ContentRepository.php';
 require APP_PATH . '/models/ProductRepository.php';
 require APP_PATH . '/models/DownloadRepository.php';
 require APP_PATH . '/models/BlogRepository.php';
+require APP_PATH . '/models/UserRepository.php';
 require APP_PATH . '/services/FileStorageService.php';
 require APP_PATH . '/services/BoqExportService.php';
 require APP_PATH . '/controllers/PageController.php';

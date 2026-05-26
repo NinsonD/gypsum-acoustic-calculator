@@ -7,6 +7,7 @@ final class AdminController extends Controller
     private ProductRepository $products;
     private DownloadRepository $downloads;
     private BlogRepository $blogs;
+    private UserRepository $users;
     private FileStorageService $files;
 
     public function __construct(array $config)
@@ -15,6 +16,7 @@ final class AdminController extends Controller
         $this->products = new ProductRepository($config);
         $this->downloads = new DownloadRepository($config);
         $this->blogs = new BlogRepository($config);
+        $this->users = new UserRepository($config);
         $this->files = new FileStorageService();
     }
 
@@ -83,7 +85,7 @@ final class AdminController extends Controller
 
     public function brands(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
 
         $edit = null;
         if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
@@ -103,7 +105,7 @@ final class AdminController extends Controller
 
     public function saveBrand(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
         $data = $this->requestData();
 
         if (!verify_csrf($data['_csrf'] ?? null)) {
@@ -123,7 +125,7 @@ final class AdminController extends Controller
 
     public function deleteBrand(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
         $data = $this->requestData();
 
         if (verify_csrf($data['_csrf'] ?? null)) {
@@ -138,7 +140,7 @@ final class AdminController extends Controller
 
     public function categories(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
 
         $edit = null;
         if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
@@ -158,7 +160,7 @@ final class AdminController extends Controller
 
     public function saveCategory(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
         $data = $this->requestData();
 
         if (!verify_csrf($data['_csrf'] ?? null)) {
@@ -178,7 +180,7 @@ final class AdminController extends Controller
 
     public function deleteCategory(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
         $data = $this->requestData();
 
         if (verify_csrf($data['_csrf'] ?? null)) {
@@ -193,7 +195,7 @@ final class AdminController extends Controller
 
     public function products(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
 
         $this->view('pages/admin-products', [
             'title' => 'Products',
@@ -207,14 +209,14 @@ final class AdminController extends Controller
 
     public function createProduct(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
 
         $this->productForm(null);
     }
 
     public function editProduct(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
 
         $product = $this->products->productById((int) $id);
 
@@ -228,7 +230,7 @@ final class AdminController extends Controller
 
     public function saveProduct(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
         $data = $this->requestData();
         $files = $this->requestFiles();
 
@@ -272,7 +274,7 @@ final class AdminController extends Controller
 
     public function deleteProduct(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'products');
         $data = $this->requestData();
 
         if (verify_csrf($data['_csrf'] ?? null)) {
@@ -291,7 +293,7 @@ final class AdminController extends Controller
 
     public function downloads(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'downloads');
 
         $this->view('pages/admin-downloads', [
             'title' => 'Downloads',
@@ -305,7 +307,7 @@ final class AdminController extends Controller
 
     public function blogs(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'blog');
 
         $this->view('pages/admin-blogs', [
             'title' => 'Blogs',
@@ -319,13 +321,13 @@ final class AdminController extends Controller
 
     public function createBlog(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'blog');
         $this->blogForm(null);
     }
 
     public function editBlog(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'blog');
 
         $post = $this->blogs->postById((int) $id);
         if ($post === null) {
@@ -338,7 +340,7 @@ final class AdminController extends Controller
 
     public function saveBlog(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'blog');
         $data = $this->requestData();
         $files = $this->requestFiles();
 
@@ -387,7 +389,7 @@ final class AdminController extends Controller
 
     public function deleteBlog(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'blog');
         $data = $this->requestData();
 
         if (verify_csrf($data['_csrf'] ?? null)) {
@@ -406,13 +408,13 @@ final class AdminController extends Controller
 
     public function createDownload(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'downloads');
         $this->downloadForm(null);
     }
 
     public function editDownload(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'downloads');
 
         $download = $this->downloads->downloadById((int) $id);
         if ($download === null) {
@@ -425,7 +427,7 @@ final class AdminController extends Controller
 
     public function saveDownload(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'downloads');
         $data = $this->requestData();
         $files = $this->requestFiles();
 
@@ -471,7 +473,7 @@ final class AdminController extends Controller
 
     public function deleteDownload(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'downloads');
         $data = $this->requestData();
 
         if (verify_csrf($data['_csrf'] ?? null)) {
@@ -488,9 +490,85 @@ final class AdminController extends Controller
         redirect_to('/admin/downloads');
     }
 
+    public function users(): void
+    {
+        Auth::requirePermission($this->config, 'users');
+
+        $this->view('pages/admin-users', [
+            'title' => 'Users',
+            'description' => 'Manage admin, editor, and contractor accounts.',
+            'user' => Auth::user($this->config),
+            'users' => $this->users->users(),
+            'roles' => $this->users->roles(),
+            'success' => flash('success'),
+            'error' => flash('error'),
+        ]);
+    }
+
+    public function createUser(): void
+    {
+        Auth::requirePermission($this->config, 'users');
+        $this->userForm(null);
+    }
+
+    public function editUser(string $id): void
+    {
+        Auth::requirePermission($this->config, 'users');
+
+        $user = $this->users->userById((int) $id);
+        if ($user === null) {
+            flash('error', 'User not found.');
+            redirect_to('/admin/users');
+        }
+
+        $this->userForm($user);
+    }
+
+    public function saveUser(): void
+    {
+        Auth::requirePermission($this->config, 'users');
+        $data = $this->requestData();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/users');
+        }
+
+        try {
+            $this->users->saveUser($data);
+            flash('success', 'User saved.');
+        } catch (Throwable $error) {
+            flash('error', $error->getMessage());
+        }
+
+        redirect_to('/admin/users');
+    }
+
+    public function deleteUser(string $id): void
+    {
+        Auth::requirePermission($this->config, 'users');
+        $data = $this->requestData();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/users');
+        }
+
+        $currentUser = Auth::user($this->config);
+        if ((int) ($currentUser['id'] ?? 0) === (int) $id) {
+            flash('error', 'You cannot delete your own account.');
+            redirect_to('/admin/users');
+        }
+
+        $this->users->deleteUser((int) $id);
+        flash('success', 'User deleted.');
+
+        redirect_to('/admin/users');
+    }
+
     public function inquiries(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'leads');
 
         $stmt = $this->db()->query(
             'SELECT id, reference, customer_name, email, phone, inquiry_type, message, status, created_at
@@ -509,7 +587,7 @@ final class AdminController extends Controller
 
     public function updateInquiryStatus(string $id): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'leads');
         $data = $this->requestData();
 
         if (!verify_csrf($data['_csrf'] ?? null)) {
@@ -541,7 +619,7 @@ final class AdminController extends Controller
 
     public function boqs(): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'leads');
 
         $stmt = $this->db()->query(
             'SELECT id, reference, project_name, calculator_type, area, calculations_json, generated_pdf, created_at
@@ -560,7 +638,7 @@ final class AdminController extends Controller
 
     public function exportBoq(string $id, string $format): void
     {
-        Auth::requireAdmin($this->config);
+        Auth::requirePermission($this->config, 'leads');
 
         $stmt = $this->db()->prepare(
             'SELECT id, reference, project_name, calculator_type, area, calculations_json, created_at
@@ -604,6 +682,7 @@ final class AdminController extends Controller
             'products' => (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn(),
             'downloads' => (int) $pdo->query('SELECT COUNT(*) FROM downloads')->fetchColumn(),
             'blogs' => (int) $pdo->query('SELECT COUNT(*) FROM blog_posts')->fetchColumn(),
+            'users' => (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn(),
         ];
     }
 
@@ -638,6 +717,18 @@ final class AdminController extends Controller
             'description' => 'Create SEO articles and technical content.',
             'user' => Auth::user($this->config),
             'post' => $post,
+            'error' => flash('error'),
+        ]);
+    }
+
+    private function userForm(?array $user): void
+    {
+        $this->view('pages/admin-user-form', [
+            'title' => $user === null ? 'Create User' : 'Edit User',
+            'description' => 'Create admin, editor, or contractor accounts.',
+            'user' => Auth::user($this->config),
+            'account' => $user,
+            'roles' => $this->users->roles(),
             'error' => flash('error'),
         ]);
     }

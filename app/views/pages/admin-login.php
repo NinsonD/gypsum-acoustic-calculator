@@ -2,7 +2,7 @@
     <form class="panel login-panel" method="post" action="<?= e(url('/admin/login')); ?>">
         <p class="eyebrow">Admin access</p>
         <h1>Login</h1>
-        <p>Use an admin account from the `users` table to access dashboard records.</p>
+        <p>Use an authorized account from the `users` table to access dashboard records.</p>
 
         <?php if (!empty($error)): ?>
             <div class="notice error"><?= e($error); ?></div>

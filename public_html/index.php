@@ -45,6 +45,11 @@ $router->get('/admin/downloads/create', [AdminController::class, 'createDownload
 $router->get('/admin/downloads/{id}/edit', [AdminController::class, 'editDownload']);
 $router->post('/admin/downloads/save', [AdminController::class, 'saveDownload']);
 $router->post('/admin/downloads/{id}/delete', [AdminController::class, 'deleteDownload']);
+$router->get('/admin/users', [AdminController::class, 'users']);
+$router->get('/admin/users/create', [AdminController::class, 'createUser']);
+$router->get('/admin/users/{id}/edit', [AdminController::class, 'editUser']);
+$router->post('/admin/users/save', [AdminController::class, 'saveUser']);
+$router->post('/admin/users/{id}/delete', [AdminController::class, 'deleteUser']);
 $router->get('/admin/boqs/{id}/export/{format}', [AdminController::class, 'exportBoq']);
 
 $router->post('/api/boq', [CalculatorController::class, 'boq']);

@@ -15,7 +15,7 @@ final class Auth
         try {
             $pdo = Database::connection($config);
             $stmt = $pdo->prepare(
-                'SELECT users.id, users.name, users.email, roles.role_name
+                'SELECT users.id, users.name, users.email, roles.role_name, roles.permissions
                  FROM users
                  INNER JOIN roles ON roles.id = users.role_id
                  WHERE users.id = :id
@@ -53,7 +53,7 @@ final class Auth
                 return false;
             }
 
-            if (!in_array($user['role_name'], ['Super Admin', 'Admin', 'Editor'], true)) {
+            if (!in_array($user['role_name'], ['Super Admin', 'Admin', 'Editor', 'Contractor'], true)) {
                 return false;
             }
 
@@ -76,6 +76,34 @@ final class Auth
     {
         if (!self::check($config)) {
             redirect_to('/admin/login');
+        }
+    }
+
+    public static function permissions(array $config): array
+    {
+        $user = self::user($config);
+
+        if ($user === null) {
+            return [];
+        }
+
+        $decoded = json_decode((string) ($user['permissions'] ?? '[]'), true);
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    public static function hasPermission(array $config, string $permission): bool
+    {
+        $permissions = self::permissions($config);
+
+        return in_array('all', $permissions, true) || in_array($permission, $permissions, true);
+    }
+
+    public static function requirePermission(array $config, string $permission): void
+    {
+        if (!self::check($config) || !self::hasPermission($config, $permission)) {
+            http_response_code(403);
+            echo 'Forbidden';
+            exit;
         }
     }
 }
