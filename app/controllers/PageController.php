@@ -7,6 +7,7 @@ final class PageController extends Controller
     private ContentRepository $content;
     private ProductRepository $products;
     private DownloadRepository $downloads;
+    private BlogRepository $blogs;
 
     public function __construct(array $config)
     {
@@ -14,6 +15,7 @@ final class PageController extends Controller
         $this->content = new ContentRepository();
         $this->products = new ProductRepository($config);
         $this->downloads = new DownloadRepository($config);
+        $this->blogs = new BlogRepository($config);
     }
 
     public function home(): void
@@ -134,6 +136,45 @@ final class PageController extends Controller
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Content-Length: ' . filesize($path));
         readfile($path);
+    }
+
+    public function blogIndex(): void
+    {
+        $posts = [];
+        try {
+            $posts = $this->blogs->publicPosts();
+        } catch (Throwable) {
+            $posts = [];
+        }
+
+        $this->view('pages/blog-index', [
+            'title' => 'Blog',
+            'description' => 'SEO articles for gypsum ceiling UAE, drywall partition Dubai, acoustic ceilings, and soundproofing.',
+            'posts' => $posts,
+        ]);
+    }
+
+    public function blogDetail(string $slug): void
+    {
+        $post = null;
+
+        try {
+            $post = $this->blogs->postBySlug($slug);
+        } catch (Throwable) {
+            $post = null;
+        }
+
+        if ($post === null) {
+            http_response_code(404);
+            $this->notFound();
+            return;
+        }
+
+        $this->view('pages/blog-detail', [
+            'title' => $post['meta_title'] ?: $post['title'],
+            'description' => $post['meta_description'] ?: $post['excerpt'],
+            'post' => $post,
+        ]);
     }
 
     public function contact(): void

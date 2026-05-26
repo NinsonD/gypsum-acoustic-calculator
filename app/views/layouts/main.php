@@ -13,6 +13,7 @@ $adminUser = class_exists('Auth') ? Auth::user($config) : null;
 $nav = [
     '/calculators' => 'Calculators',
     '/products' => 'Products',
+    '/blog' => 'Blog',
     '/installation' => 'Installation',
     '/knowledge' => 'Knowledge',
     '/downloads' => 'Downloads',
@@ -60,6 +61,7 @@ $nav = [
         <div class="footer-links">
             <a href="<?= e(url('/calculators')); ?>">Material calculators</a>
             <a href="<?= e(url('/products')); ?>">Product catalog</a>
+            <a href="<?= e(url('/blog')); ?>">Blog</a>
             <a href="<?= e(url('/admin')); ?>">Admin structure</a>
         </div>
     </footer>

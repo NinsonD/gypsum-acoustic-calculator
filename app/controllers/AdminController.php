@@ -6,6 +6,7 @@ final class AdminController extends Controller
 {
     private ProductRepository $products;
     private DownloadRepository $downloads;
+    private BlogRepository $blogs;
     private FileStorageService $files;
 
     public function __construct(array $config)
@@ -13,6 +14,7 @@ final class AdminController extends Controller
         parent::__construct($config);
         $this->products = new ProductRepository($config);
         $this->downloads = new DownloadRepository($config);
+        $this->blogs = new BlogRepository($config);
         $this->files = new FileStorageService();
     }
 
@@ -301,6 +303,107 @@ final class AdminController extends Controller
         ]);
     }
 
+    public function blogs(): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $this->view('pages/admin-blogs', [
+            'title' => 'Blogs',
+            'description' => 'Manage SEO articles, guides, and technical blog posts.',
+            'user' => Auth::user($this->config),
+            'posts' => $this->blogs->adminPosts(),
+            'success' => flash('success'),
+            'error' => flash('error'),
+        ]);
+    }
+
+    public function createBlog(): void
+    {
+        Auth::requireAdmin($this->config);
+        $this->blogForm(null);
+    }
+
+    public function editBlog(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $post = $this->blogs->postById((int) $id);
+        if ($post === null) {
+            flash('error', 'Blog post not found.');
+            redirect_to('/admin/blogs');
+        }
+
+        $this->blogForm($post);
+    }
+
+    public function saveBlog(): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+        $files = $this->requestFiles();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/blogs');
+        }
+
+        try {
+            $existing = null;
+            $id = (int) ($data['id'] ?? 0);
+            if ($id > 0) {
+                $existing = $this->blogs->postById($id);
+            }
+
+            $upload = $files['image_upload'] ?? null;
+            if (is_array($upload) && ($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                $stored = $this->files->upload(
+                    $upload,
+                    PUBLIC_PATH,
+                    'uploads/blogs',
+                    ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+                    10 * 1024 * 1024
+                );
+                $data['image'] = $stored['path'];
+                if ($existing && !empty($existing['image'])) {
+                    $this->files->delete(PUBLIC_PATH, (string) $existing['image']);
+                }
+            } elseif ($existing) {
+                $data['image'] = (string) ($data['image'] ?? $existing['image'] ?? '');
+            }
+
+            $currentUser = Auth::user($this->config);
+            if (!isset($data['author_id']) || trim((string) $data['author_id']) === '') {
+                $data['author_id'] = $currentUser['id'] ?? null;
+            }
+
+            $this->blogs->savePost($data);
+            flash('success', 'Blog post saved.');
+        } catch (Throwable $error) {
+            flash('error', $error->getMessage());
+        }
+
+        redirect_to('/admin/blogs');
+    }
+
+    public function deleteBlog(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (verify_csrf($data['_csrf'] ?? null)) {
+            $post = $this->blogs->postById((int) $id);
+            if ($post !== null && !empty($post['image'])) {
+                $this->files->delete(PUBLIC_PATH, (string) $post['image']);
+            }
+            $this->blogs->deletePost((int) $id);
+            flash('success', 'Blog post deleted.');
+        } else {
+            flash('error', 'Security token expired. Please try again.');
+        }
+
+        redirect_to('/admin/blogs');
+    }
+
     public function createDownload(): void
     {
         Auth::requireAdmin($this->config);
@@ -468,6 +571,7 @@ final class AdminController extends Controller
             'boqs' => (int) $pdo->query('SELECT COUNT(*) FROM boq_estimations')->fetchColumn(),
             'products' => (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn(),
             'downloads' => (int) $pdo->query('SELECT COUNT(*) FROM downloads')->fetchColumn(),
+            'blogs' => (int) $pdo->query('SELECT COUNT(*) FROM blog_posts')->fetchColumn(),
         ];
     }
 
@@ -491,6 +595,17 @@ final class AdminController extends Controller
             'description' => 'Upload downloadable technical resources.',
             'user' => Auth::user($this->config),
             'download' => $download,
+            'error' => flash('error'),
+        ]);
+    }
+
+    private function blogForm(?array $post): void
+    {
+        $this->view('pages/admin-blog-form', [
+            'title' => $post === null ? 'Create Blog Post' : 'Edit Blog Post',
+            'description' => 'Create SEO articles and technical content.',
+            'user' => Auth::user($this->config),
+            'post' => $post,
             'error' => flash('error'),
         ]);
     }

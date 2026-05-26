@@ -7,7 +7,7 @@
 <section class="card-grid four">
     <article class="card"><h2>Products</h2><p>Brands, categories, specifications, images, NRC, STC, and fire ratings.</p></article>
     <article class="card"><h2>Leads</h2><p>Inquiry records, WhatsApp handoff, email alerts, and CRM status.</p></article>
-    <article class="card"><h2>Blogs</h2><p>SEO articles, metadata, schema, categories, and authors.</p></article>
+    <article class="card"><h2>Blogs</h2><p>SEO articles, metadata, schema, categories, and authors.</p><a href="<?= e(url('/admin/blogs')); ?>">Open blogs</a></article>
     <article class="card"><h2>Downloads</h2><p>Datasheets, BOQ templates, CAD files, and method statements.</p></article>
     <article class="card"><h2>Gallery</h2><p>Project photos, installation stages, and technical diagrams.</p></article>
     <article class="card"><h2>SEO</h2><p>Sitemap, redirects, canonical URLs, and structured data.</p></article>
