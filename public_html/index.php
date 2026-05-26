@@ -22,6 +22,7 @@ $router->post('/admin/login', [AdminController::class, 'authenticate']);
 $router->post('/admin/logout', [AdminController::class, 'logout']);
 $router->get('/admin', [AdminController::class, 'dashboard']);
 $router->get('/admin/inquiries', [AdminController::class, 'inquiries']);
+$router->post('/admin/inquiries/{id}/status', [AdminController::class, 'updateInquiryStatus']);
 $router->get('/admin/boqs', [AdminController::class, 'boqs']);
 $router->get('/admin/brands', [AdminController::class, 'brands']);
 $router->post('/admin/brands/save', [AdminController::class, 'saveBrand']);

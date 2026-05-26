@@ -7,6 +7,9 @@
     <?php partial('admin-nav', ['active' => 'inquiries']); ?>
 </section>
 
+<?php if (!empty($success)): ?><div class="notice success"><?= e($success); ?></div><?php endif; ?>
+<?php if (!empty($error)): ?><div class="notice error"><?= e($error); ?></div><?php endif; ?>
+
 <section class="panel">
     <div class="table-wrap">
         <table>
@@ -18,6 +21,7 @@
                     <th>Type</th>
                     <th>Message</th>
                     <th>Status</th>
+                    <th>Update</th>
                     <th>Date</th>
                 </tr>
             </thead>
@@ -29,12 +33,24 @@
                         <td><?= e($inquiry['email']); ?><br><?= e($inquiry['phone']); ?></td>
                         <td><?= e($inquiry['inquiry_type']); ?></td>
                         <td><?= e($inquiry['message']); ?></td>
-                        <td><?= e($inquiry['status']); ?></td>
+                        <td><strong><?= e($inquiry['status']); ?></strong></td>
+                        <td>
+                            <form method="post" action="<?= e(url('/admin/inquiries/' . $inquiry['id'] . '/status')); ?>" class="status-inline">
+                                <input type="hidden" name="_csrf" value="<?= e(csrf_token()); ?>">
+                                <select name="status">
+                                    <option value="new" <?= $inquiry['status'] === 'new' ? 'selected' : ''; ?>>New</option>
+                                    <option value="contacted" <?= $inquiry['status'] === 'contacted' ? 'selected' : ''; ?>>Contacted</option>
+                                    <option value="quoted" <?= $inquiry['status'] === 'quoted' ? 'selected' : ''; ?>>Quoted</option>
+                                    <option value="closed" <?= $inquiry['status'] === 'closed' ? 'selected' : ''; ?>>Closed</option>
+                                </select>
+                                <button class="button" type="submit">Save</button>
+                            </form>
+                        </td>
                         <td><?= e($inquiry['created_at']); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (count($inquiries) === 0): ?>
-                    <tr><td colspan="7">No inquiries saved yet.</td></tr>
+                    <tr><td colspan="8">No inquiries saved yet.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>

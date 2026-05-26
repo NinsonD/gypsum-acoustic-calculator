@@ -507,6 +507,38 @@ final class AdminController extends Controller
         ]);
     }
 
+    public function updateInquiryStatus(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/inquiries');
+        }
+
+        $status = strtolower(trim((string) ($data['status'] ?? 'new')));
+        $allowed = ['new', 'contacted', 'quoted', 'closed'];
+
+        if (!in_array($status, $allowed, true)) {
+            flash('error', 'Invalid inquiry status.');
+            redirect_to('/admin/inquiries');
+        }
+
+        try {
+            $stmt = $this->db()->prepare('UPDATE inquiries SET status = :status WHERE id = :id');
+            $stmt->execute([
+                'status' => $status,
+                'id' => (int) $id,
+            ]);
+            flash('success', 'Inquiry status updated.');
+        } catch (Throwable $error) {
+            flash('error', $error->getMessage());
+        }
+
+        redirect_to('/admin/inquiries');
+    }
+
     public function boqs(): void
     {
         Auth::requireAdmin($this->config);

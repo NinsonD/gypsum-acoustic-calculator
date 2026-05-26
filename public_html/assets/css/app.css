@@ -510,6 +510,21 @@ th {
     margin: 0;
 }
 
+.status-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-inline select {
+    min-width: 130px;
+}
+
+.status-inline .button {
+    min-height: 36px;
+    padding: 8px 12px;
+}
+
 .button.danger {
     border-color: #ffc6c6;
     color: #9a1c1c;
