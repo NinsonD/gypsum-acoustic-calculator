@@ -190,6 +190,7 @@
         var tileSystem = form.elements.tile_system;
         var status = root.querySelector('[data-calculator-status]');
         var currentResult = null;
+        var exportButtons = root.querySelectorAll('[data-export-boq]');
 
         function updateSections() {
             root.querySelectorAll('[data-section]').forEach(function (section) {
@@ -240,6 +241,56 @@
                 .then(function (response) { return response.json(); })
                 .then(function (data) { status.textContent = data.message || 'BOQ saved.'; })
                 .catch(function () { status.textContent = 'Unable to save BOQ.'; });
+        });
+
+        function exportBoq(format) {
+            if (!currentResult) {
+                calculate();
+            }
+
+            status.textContent = 'Preparing ' + format.toUpperCase() + ' export...';
+
+            fetch(endpoint('/api/boq/export'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    project_name: form.elements.project_name.value,
+                    calculator_type: currentResult.type,
+                    area: currentResult.area,
+                    summary: currentResult.summary,
+                    items: currentResult.items,
+                    format: format
+                })
+            })
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('Export failed');
+                    }
+
+                    return response.blob().then(function (blob) {
+                        return {
+                            blob: blob,
+                            filename: (format === 'pdf' ? 'boq-estimate.pdf' : 'boq-estimate.csv')
+                        };
+                    });
+                })
+                .then(function (file) {
+                    var link = document.createElement('a');
+                    link.href = URL.createObjectURL(file.blob);
+                    link.download = file.filename;
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                    status.textContent = format.toUpperCase() + ' export ready.';
+                })
+                .catch(function () {
+                    status.textContent = 'Unable to export BOQ.';
+                });
+        }
+
+        exportButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                exportBoq(button.getAttribute('data-export-boq'));
+            });
         });
 
         root.querySelector('[data-download-boq]').addEventListener('click', function () {

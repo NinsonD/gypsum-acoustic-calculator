@@ -17,6 +17,7 @@
                     <th>Calculator</th>
                     <th>Area</th>
                     <th>Items</th>
+                    <th>Export</th>
                     <th>Date</th>
                 </tr>
             </thead>
@@ -32,11 +33,16 @@
                         <td><?= e($boq['calculator_type']); ?></td>
                         <td><?= e($boq['area']); ?></td>
                         <td><?= e(count($items)); ?></td>
+                        <td>
+                            <a href="<?= e(url('/admin/boqs/' . $boq['id'] . '/export/pdf')); ?>">PDF</a>
+                            |
+                            <a href="<?= e(url('/admin/boqs/' . $boq['id'] . '/export/csv')); ?>">Excel</a>
+                        </td>
                         <td><?= e($boq['created_at']); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (count($boqs) === 0): ?>
-                    <tr><td colspan="6">No BOQ estimates saved yet.</td></tr>
+                    <tr><td colspan="7">No BOQ estimates saved yet.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>

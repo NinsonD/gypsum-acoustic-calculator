@@ -31,8 +31,10 @@ $router->get('/admin/products/create', [AdminController::class, 'createProduct']
 $router->get('/admin/products/{id}/edit', [AdminController::class, 'editProduct']);
 $router->post('/admin/products/save', [AdminController::class, 'saveProduct']);
 $router->post('/admin/products/{id}/delete', [AdminController::class, 'deleteProduct']);
+$router->get('/admin/boqs/{id}/export/{format}', [AdminController::class, 'exportBoq']);
 
 $router->post('/api/boq', [CalculatorController::class, 'boq']);
+$router->post('/api/boq/export', [CalculatorController::class, 'export']);
 $router->post('/api/inquiries', [InquiryController::class, 'store']);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', $_SERVER['REQUEST_URI'] ?? '/');

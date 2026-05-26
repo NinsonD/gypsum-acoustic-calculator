@@ -293,6 +293,42 @@ final class AdminController extends Controller
         ]);
     }
 
+    public function exportBoq(string $id, string $format): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $stmt = $this->db()->prepare(
+            'SELECT id, reference, project_name, calculator_type, area, calculations_json, created_at
+             FROM boq_estimations
+             WHERE id = :id
+             LIMIT 1'
+        );
+        $stmt->execute(['id' => (int) $id]);
+        $boq = $stmt->fetch();
+
+        if (!$boq) {
+            http_response_code(404);
+            echo 'BOQ not found.';
+            return;
+        }
+
+        $payload = json_decode((string) $boq['calculations_json'], true);
+        $payload = is_array($payload) ? $payload : [];
+        $payload['reference'] = $boq['reference'] ?? ('BOQ-' . $boq['id']);
+        $payload['project_name'] = $boq['project_name'];
+        $payload['calculator_type'] = $boq['calculator_type'];
+        $payload['area'] = $boq['area'];
+        $payload['created_at'] = $boq['created_at'];
+
+        $exporter = new BoqExportService();
+        $file = strtolower($format) === 'pdf' ? $exporter->pdf($payload) : $exporter->csv($payload);
+
+        header('Content-Type: ' . $file['content_type']);
+        header('Content-Disposition: attachment; filename="' . $file['filename'] . '"');
+        header('Content-Length: ' . strlen($file['content']));
+        echo $file['content'];
+    }
+
     private function stats(): array
     {
         $pdo = $this->db();
