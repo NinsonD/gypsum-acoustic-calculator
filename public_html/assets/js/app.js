@@ -1,5 +1,4 @@
 (function () {
-    var boardArea = 2.88;
     var basePath = document.body ? document.body.getAttribute('data-base-path') || '' : '';
 
     function endpoint(path) {
@@ -16,116 +15,128 @@
         return Math.round((value + Number.EPSILON) * 100) / 100;
     }
 
+    function formatQty(value) {
+        if (!Number.isFinite(value)) {
+            return '';
+        }
+
+        var rounded = Math.round((value + Number.EPSILON) * 1000000) / 1000000;
+        return rounded.toFixed(6).replace(/\.?0+$/, '');
+    }
+
     function withWaste(value, waste) {
         return round(value * (1 + waste / 100));
     }
 
     function item(category, name, unit, qty, notes) {
-        return { category: category, name: name, unit: unit, qty: round(qty), notes: notes };
+        return { category: category, name: name, unit: unit, qty: qty, notes: notes };
     }
 
     function ceiling(form) {
-        var length = number(form, 'ceiling_length', 12);
-        var width = number(form, 'ceiling_width', 8);
-        var layers = number(form, 'ceiling_layers', 1);
-        var waste = number(form, 'ceiling_waste', 8);
-        var area = round(length * width);
-        var perimeter = round((length + width) * 2);
-        var boardCount = Math.ceil(withWaste((area * layers) / boardArea, waste));
-        var mainLines = Math.ceil(width / 1.2) + 1;
-        var furringLines = Math.ceil(length / 0.4) + 1;
-        var hangers = (Math.ceil(length / 1.2) + 1) * (Math.ceil(width / 1.2) + 1);
+        var area = number(form, 'ceiling_area', 12);
+        var boardCount = area / 2.88;
 
         return {
             type: 'ceiling',
-            title: 'Gypsum ceiling estimate',
+            title: 'Furring system estimate',
             area: area,
             summary: [
                 ['Area', area, 'sqm'],
-                ['Perimeter', perimeter, 'lm'],
-                ['Boards', boardCount, 'pcs'],
-                ['Waste', waste, '%']
+                ['Boards', boardCount, 'pcs']
             ],
             items: [
-                item('Boards', 'Gypsum board 1200 x 2400 mm', 'pcs', boardCount, 'Based on selected board layers.'),
-                item('Framing', 'Main channel', 'lm', withWaste(mainLines * length, waste), 'Typical 1200 mm spacing.'),
-                item('Framing', 'Furring channel', 'lm', withWaste(furringLines * width, waste), 'Typical 400 mm spacing.'),
-                item('Framing', 'Perimeter wall angle', 'lm', withWaste(perimeter, waste), 'Room perimeter allowance.'),
-                item('Suspension', 'Threaded rod and hanger set', 'sets', Math.ceil(withWaste(hangers, waste)), 'Typical 1200 x 1200 mm hanger grid.'),
-                item('Fixing', 'Gypsum screws', 'pcs', boardCount * 45, 'Approximate screw allowance.'),
-                item('Finishing', 'Joint compound', 'kg', withWaste(area * 0.35 * layers, waste), 'Joint treatment allowance.')
+                item('Boards', 'Gypsum Board 1.2 x 2.4mtrs', 'pcs', boardCount, 'Area / 2.88'),
+                item('Framing', 'Main Channel', 'pcs', area * 0.4, 'Area * 1.2 / 3'),
+                item('Framing', 'Furring Channel', 'pcs', area * 0.5, 'Area * 1.5 / 3'),
+                item('Framing', 'Angle', 'pcs', area / 3, 'Area / 3'),
+                item('Suspension', 'Hanger Wire', 'roll', area / 100, 'Area / 100'),
+                item('Suspension', 'Adjustable Clip', 'pcs', area, 'Area * 1'),
+                item('Fixing', 'Wire Clip', 'pcs', area * 3, 'Area * 3'),
+                item('Fixing', 'Channel Bracket', 'pcs', area, 'Area * 1'),
+                item('Fixing', 'Clip Nail and Cartridge', 'pcs', area * 3, 'Area * 3'),
+                item('Fixing', 'Steel Nail', 'pcs', area * 10, 'Area * 10'),
+                item('Finishing', 'Fiber Tape', 'roll', area * 2 / 90, 'Area * 2 / 90'),
+                item('Finishing', 'Ready Mix', 'drum', area * 0.5 / 28, 'Area * 0.5 / 28'),
+                item('Fixing', 'Screw 1"', 'pcs', area * 10, 'Area * 10')
             ]
         };
     }
 
     function partition(form) {
-        var length = number(form, 'partition_length', 18);
-        var height = number(form, 'partition_height', 3.2);
-        var layers = number(form, 'partition_layers', 1);
-        var spacing = Math.min(number(form, 'partition_spacing', 0.6), 0.6);
-        var waste = number(form, 'partition_waste', 8);
-        var rockwool = form.elements.partition_rockwool && form.elements.partition_rockwool.checked;
-        var oneSideArea = round(length * height);
-        var totalBoardArea = round(oneSideArea * 2 * layers);
-        var boardCount = Math.ceil(withWaste(totalBoardArea / boardArea, waste));
-        var studs = Math.ceil(length / spacing) + 1;
+        var area = number(form, 'partition_area', 293);
+        var glasswool = form.elements.partition_glasswool && form.elements.partition_glasswool.checked;
+        var boardCount = area / 2.88;
 
         var items = [
-            item('Boards', 'Gypsum plasterboard', 'pcs', boardCount, 'Both faces and selected layers.'),
-            item('Framing', 'Floor and ceiling track', 'lm', withWaste(length * 2, waste), 'Top and bottom track.'),
-            item('Framing', 'C-stud', 'pcs', Math.ceil(withWaste(studs, waste)), 'Based on center-to-center spacing.'),
-            item('Fixing', 'Drywall screws', 'pcs', boardCount * 55, 'Approximate screw allowance.'),
-            item('Finishing', 'Joint compound', 'kg', withWaste(totalBoardArea * 0.28, waste), 'Jointing allowance.'),
-            item('Acoustic', 'Acoustic sealant', 'tubes', Math.ceil(withWaste((length * 2 + height * 2) / 9, waste)), 'Seal perimeter gaps.')
+            item('Boards', 'Gypsum Board 1.2 x 2.4mtrs', 'pcs', boardCount, 'Area / 2.88'),
+            item('Framing', 'Stud', 'pcs', area * 2.5 / 3, 'Area * 2.5 / 3'),
+            item('Framing', 'Track', 'pcs', area * 1.2 / 3, 'Area * 1.2 / 3'),
+            item('Fixing', 'Steel Nail', 'pcs', area * 10, 'Area * 10'),
+            item('Finishing', 'Fiber Tape', 'roll', area * 2 / 90, 'Area * 2 / 90'),
+            item('Finishing', 'Ready Mix', 'drum', area * 0.5 / 28, 'Area * 0.5 / 28'),
+            item('Fixing', 'Screw 1"', 'pcs', area * 10, 'Area * 10'),
+            item('Fixing', 'screw 1/2"', 'pcs', area * 6, 'Area * 6')
         ];
 
-        if (rockwool) {
-            items.push(item('Insulation', 'Rockwool slab', 'sqm', withWaste(oneSideArea, waste), 'Cavity insulation allowance.'));
+        if (glasswool) {
+            items.push(item('Insulation', 'Glasswool 60 x 120cm', 'pcs', area / 0.72, 'Area / 0.72'));
         }
 
         return {
             type: 'partition',
-            title: 'Drywall partition estimate',
-            area: oneSideArea,
+            title: 'Partition system estimate',
+            area: area,
             summary: [
-                ['One side area', oneSideArea, 'sqm'],
-                ['Board area', totalBoardArea, 'sqm'],
-                ['Studs', studs, 'pcs'],
-                ['Waste', waste, '%']
+                ['Area', area, 'sqm'],
+                ['Boards', boardCount, 'pcs']
             ],
             items: items
         };
     }
 
     function tile(form) {
-        var length = number(form, 'tile_length', 14);
-        var width = number(form, 'tile_width', 9);
-        var waste = number(form, 'tile_waste', 7);
-        var tileSize = form.elements.tile_size.value;
-        var tileArea = tileSize === '600x1200' ? 0.72 : 0.36;
-        var area = round(length * width);
-        var tileCount = Math.ceil(withWaste(area / tileArea, waste));
-        var mainLines = Math.ceil(width / 1.2) + 1;
-        var crossRows = Math.ceil(length / 0.6) + 1;
+        var area = number(form, 'tile_area', 20);
+        var tileSystem = form.elements.tile_system.value;
+        var clipIn = tileSystem === 'clip-in';
 
-        return {
-            type: 'tile',
-            title: 'Acoustic ceiling tile estimate',
-            area: area,
-            summary: [
-                ['Area', area, 'sqm'],
-                ['Tile size', tileSize.replace('x', ' x '), 'mm'],
-                ['Tiles', tileCount, 'pcs'],
-                ['Waste', waste, '%']
-            ],
-            items: [
-                item('Tiles', 'Mineral fiber acoustic tile', 'pcs', tileCount, 'Verify edge detail.'),
-                item('Grid', 'Main tee runner', 'lm', withWaste(mainLines * length, waste), 'Typical 1200 mm spacing.'),
-                item('Grid', 'Cross tee', 'lm', withWaste(crossRows * width, waste), 'Allowance for 600 mm module.'),
-                item('Grid', 'Wall angle', 'lm', withWaste((length + width) * 2, waste), 'Perimeter trim.'),
-                item('Suspension', 'Hanger wire and anchor', 'sets', Math.ceil(withWaste((Math.ceil(length / 1.2) + 1) * mainLines, waste)), 'Main runner hanger spacing.')
-            ]
-        };
+        return clipIn
+            ? {
+                type: 'tile',
+                title: 'Clip-in tile estimate',
+                area: area,
+                summary: [
+                    ['Area', area, 'sqm'],
+                    ['System', 'Clip In', ''],
+                ],
+                items: [
+                    item('Tiles', 'Clip In Tile', 'sqm', area, 'Area'),
+                    item('Grid', 'Spring Tee', 'pcs', area * 0.4, 'Area * 0.4'),
+                    item('Perimeter', 'Edge Trim', 'pcs', area * 0.33, 'Area * 0.33'),
+                    item('Framing', 'Main Channel', 'pcs', area * 0.23, 'Area * 0.23'),
+                    item('Fixing', 'Wire Clip', 'pcs', area * 2, 'Area * 2')
+                ]
+            }
+            : {
+                type: 'tile',
+                title: 'Lay-in tile estimate',
+                area: area,
+                summary: [
+                    ['Area', area, 'sqm'],
+                    ['System', 'Lay In', ''],
+                ],
+                items: [
+                    item('Tiles', 'Tile', 'sqm', area, 'Area'),
+                    item('Grid', 'Main Tee 3.6 m', 'pcs', area * 0.225, 'Area * 0.225'),
+                    item('Perimeter', 'Wall Angle 3.6 m', 'pcs', area * 0.225, 'Area * 0.225'),
+                    item('Perimeter', 'Wall Angle 3 m', 'pcs', area * 0.25, 'Area * 0.25'),
+                    item('Grid', 'Cross Tee 120', 'pcs', area * 1.3, 'Area * 1.3'),
+                    item('Grid', 'Cross Tee 60', 'pcs', area * 1.3, 'Area * 1.3'),
+                    item('Suspension', 'Wire Roll', 'roll', area * 1.415 / 90, 'Area * 1.415 / 90'),
+                    item('Suspension', 'Tie Hanger', 'pkt', area / 100, 'Area / 100'),
+                    item('Fixing', 'Adjustable Clip', 'pcs', area * 1.012, 'Area * 1.012'),
+                    item('Fixing', 'Nail', 'pcs', area * 3, 'Area * 3')
+                ]
+            };
     }
 
     function acoustic(form) {
@@ -165,17 +176,18 @@
         var summary = root.querySelector('[data-summary]');
         var body = root.querySelector('[data-boq-body]');
         summary.innerHTML = result.summary.map(function (row) {
-            return '<div class="summary-item"><span>' + row[0] + '</span><strong>' + row[1] + '</strong><small>' + row[2] + '</small></div>';
+            return '<div class="summary-item"><span>' + row[0] + '</span><strong>' + formatQty(row[1]) + '</strong><small>' + row[2] + '</small></div>';
         }).join('');
 
         body.innerHTML = result.items.map(function (row) {
-            return '<tr><td>' + row.category + '</td><td><strong>' + row.name + '</strong></td><td>' + row.unit + '</td><td>' + row.qty + '</td><td>' + row.notes + '</td></tr>';
+            return '<tr><td>' + row.category + '</td><td><strong>' + row.name + '</strong></td><td>' + row.unit + '</td><td>' + formatQty(row.qty) + '</td><td>' + row.notes + '</td></tr>';
         }).join('');
     }
 
     function initCalculator(root) {
         var form = root.querySelector('.calculator-form');
         var mode = form.elements.mode;
+        var tileSystem = form.elements.tile_system;
         var status = root.querySelector('[data-calculator-status]');
         var currentResult = null;
 
@@ -195,6 +207,14 @@
             updateSections();
             calculate();
         });
+
+        if (tileSystem) {
+            tileSystem.addEventListener('change', function () {
+                if (mode.value === 'tile') {
+                    calculate();
+                }
+            });
+        }
 
         form.addEventListener('submit', function (event) {
             event.preventDefault();

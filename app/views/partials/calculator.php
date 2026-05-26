@@ -13,38 +13,32 @@
         <label>
             <span>System</span>
             <select name="mode" data-mode>
-                <option value="ceiling">Gypsum ceiling</option>
-                <option value="partition">Drywall partition</option>
-                <option value="tile">Acoustic ceiling tile</option>
+                <option value="ceiling">Furring system</option>
+                <option value="partition">Partition system</option>
+                <option value="tile">Ceiling tile system</option>
                 <option value="acoustic">Room acoustic treatment</option>
             </select>
         </label>
 
         <div class="form-grid calculator-section" data-section="ceiling">
-            <label><span>Length (m)</span><input type="number" step="0.1" name="ceiling_length" value="12"></label>
-            <label><span>Width (m)</span><input type="number" step="0.1" name="ceiling_width" value="8"></label>
-            <label><span>Board layers</span><input type="number" step="1" name="ceiling_layers" value="1"></label>
-            <label><span>Waste (%)</span><input type="number" step="1" name="ceiling_waste" value="8"></label>
+            <label><span>Area (sqm)</span><input type="number" step="0.01" name="ceiling_area" value="100"></label>
         </div>
 
         <div class="form-grid calculator-section is-hidden" data-section="partition">
-            <label><span>Length (m)</span><input type="number" step="0.1" name="partition_length" value="18"></label>
-            <label><span>Height (m)</span><input type="number" step="0.1" name="partition_height" value="3.2"></label>
-            <label><span>Layers each side</span><input type="number" step="1" name="partition_layers" value="1"></label>
-            <label><span>Stud spacing (m)</span><input type="number" step="0.1" name="partition_spacing" value="0.6"></label>
-            <label><span>Waste (%)</span><input type="number" step="1" name="partition_waste" value="8"></label>
-            <label class="check-row"><input type="checkbox" name="partition_rockwool" checked><span>Include rockwool</span></label>
+            <label><span>Area (sqm)</span><input type="number" step="0.01" name="partition_area" value="293"></label>
+            <label class="check-row"><input type="checkbox" name="partition_glasswool" checked><span>Include glasswool</span></label>
         </div>
 
         <div class="form-grid calculator-section is-hidden" data-section="tile">
-            <label><span>Length (m)</span><input type="number" step="0.1" name="tile_length" value="14"></label>
-            <label><span>Width (m)</span><input type="number" step="0.1" name="tile_width" value="9"></label>
-            <label><span>Waste (%)</span><input type="number" step="1" name="tile_waste" value="7"></label>
             <label>
-                <span>Tile size</span>
-                <select name="tile_size">
-                    <option value="600x600">600 x 600 mm</option>
-                    <option value="600x1200">600 x 1200 mm</option>
+                <span>Area (sqm)</span>
+                <input type="number" step="0.01" name="tile_area" value="20">
+            </label>
+            <label>
+                <span>Tile system</span>
+                <select name="tile_system">
+                    <option value="clip-in">Clip In</option>
+                    <option value="lay-in">Lay In</option>
                 </select>
             </label>
         </div>
