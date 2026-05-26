@@ -40,6 +40,14 @@
         return rounded.toFixed(6).replace(/\.?0+$/, '');
     }
 
+    function formatSummaryValue(value) {
+        if (Number.isFinite(value)) {
+            return formatMeasure(value);
+        }
+
+        return value === null || value === undefined ? '' : String(value);
+    }
+
     function withWaste(value, waste) {
         return round(value * (1 + waste / 100));
     }
@@ -80,18 +88,21 @@
 
     function partition(form) {
         var area = number(form, 'partition_area', 293);
+        var layerCount = parseInt(form.elements.partition_layers ? form.elements.partition_layers.value : '1', 10);
+        layerCount = Number.isFinite(layerCount) && layerCount > 0 ? layerCount : 1;
+        var layerLabel = layerCount === 2 ? 'Double layer' : 'Single layer';
         var glasswool = form.elements.partition_glasswool && form.elements.partition_glasswool.checked;
-        var boardCount = roundQty(area / 2.88);
+        var boardCount = roundQty(area / 2.88 * layerCount);
 
         var items = [
-            item('Boards', 'Gypsum Board 1.2 x 2.4mtrs', 'pcs', boardCount, 'Area / 2.88'),
+            item('Boards', 'Gypsum Board 1.2 x 2.4mtrs', 'pcs', boardCount, 'Area / 2.88 x ' + layerCount),
             item('Framing', 'Stud', 'pcs', area * 2.5 / 3, 'Area * 2.5 / 3'),
             item('Framing', 'Track', 'pcs', area * 1.2 / 3, 'Area * 1.2 / 3'),
-            item('Fixing', 'Steel Nail', 'pcs', area * 10, 'Area * 10'),
-            item('Finishing', 'Fiber Tape', 'roll', area * 2 / 90, 'Area * 2 / 90'),
-            item('Finishing', 'Ready Mix', 'drum', area * 0.5 / 28, 'Area * 0.5 / 28'),
-            item('Fixing', 'Screw 1"', 'pcs', area * 10, 'Area * 10'),
-            item('Fixing', 'screw 1/2"', 'pcs', area * 6, 'Area * 6')
+            item('Fixing', 'Steel Nail', 'pcs', area * 10 * layerCount, 'Area * 10 x ' + layerCount),
+            item('Finishing', 'Fiber Tape', 'roll', area * 2 / 90 * layerCount, 'Area * 2 / 90 x ' + layerCount),
+            item('Finishing', 'Ready Mix', 'drum', area * 0.5 / 28 * layerCount, 'Area * 0.5 / 28 x ' + layerCount),
+            item('Fixing', 'Screw 1"', 'pcs', area * 10 * layerCount, 'Area * 10 x ' + layerCount),
+            item('Fixing', 'screw 1/2"', 'pcs', area * 6 * layerCount, 'Area * 6 x ' + layerCount)
         ];
 
         if (glasswool) {
@@ -100,10 +111,11 @@
 
         return {
             type: 'partition',
-            title: 'Partition system estimate',
+            title: layerLabel + ' partition system estimate',
             area: area,
             summary: [
                 ['Area', area, 'sqm'],
+                ['Layers', layerLabel, ''],
                 ['Boards', boardCount, 'pcs']
             ],
             items: items
@@ -192,7 +204,7 @@
         var summary = root.querySelector('[data-summary]');
         var body = root.querySelector('[data-boq-body]');
         summary.innerHTML = result.summary.map(function (row) {
-            return '<div class="summary-item"><span>' + row[0] + '</span><strong>' + formatMeasure(row[1]) + '</strong><small>' + row[2] + '</small></div>';
+            return '<div class="summary-item"><span>' + row[0] + '</span><strong>' + formatSummaryValue(row[1]) + '</strong><small>' + row[2] + '</small></div>';
         }).join('');
 
         body.innerHTML = result.items.map(function (row) {

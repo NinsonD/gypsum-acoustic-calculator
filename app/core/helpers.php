@@ -85,7 +85,14 @@ function base_path(): string
 
 function asset(string $path): string
 {
-    return url('/assets/' . ltrim($path, '/'));
+    $relative = '/assets/' . ltrim($path, '/');
+    $file = PUBLIC_PATH . $relative;
+
+    if (is_file($file)) {
+        return url($relative) . '?v=' . filemtime($file);
+    }
+
+    return url($relative);
 }
 
 function redirect_to(string $path): never

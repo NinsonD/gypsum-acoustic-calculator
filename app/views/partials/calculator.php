@@ -26,6 +26,13 @@
 
         <div class="form-grid calculator-section is-hidden" data-section="partition">
             <label><span>Area (sqm)</span><input type="number" step="0.01" name="partition_area" value="293"></label>
+            <label>
+                <span>Board layers</span>
+                <select name="partition_layers">
+                    <option value="1" selected>Single layer</option>
+                    <option value="2">Double layer</option>
+                </select>
+            </label>
             <label class="check-row"><input type="checkbox" name="partition_glasswool" checked><span>Include glasswool</span></label>
         </div>
 
