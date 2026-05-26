@@ -2,10 +2,11 @@
     <div class="hero-copy">
         <p class="eyebrow">UAE/GCC construction engineering platform</p>
         <h1>Gypsum & Acoustic Engineering Systems</h1>
-        <p>Material estimators, BOQ previews, installation references, acoustic education, product data, and contractor inquiry routing in a simple cPanel-ready PHP structure.</p>
+        <p>Material estimators, BOQ generation, installation references, acoustic guidance, product data, and contractor inquiry routing in a clean cPanel-ready PHP structure.</p>
         <div class="button-row">
             <a class="button primary" href="<?= e(url('/calculators')); ?>">Open calculators</a>
             <a class="button" href="<?= e(url('/products')); ?>">Browse products</a>
+            <a class="button" href="<?= e(url('/contact')); ?>">Request inquiry</a>
         </div>
     </div>
     <div class="technical-visual" aria-label="Ceiling and partition technical visual">
@@ -31,7 +32,7 @@
     </div>
     <div class="card-grid four">
         <article class="card"><h3>Calculators</h3><p>Gypsum ceiling, partition, acoustic tile, and room treatment estimates.</p></article>
-        <article class="card"><h3>BOQ tools</h3><p>Line-item output ready for MySQL storage and PDF/Excel export later.</p></article>
+        <article class="card"><h3>BOQ tools</h3><p>Line-item output ready for MySQL storage, PDF export, and Excel-friendly downloads.</p></article>
         <article class="card"><h3>Knowledge center</h3><p>NRC, STC, reverberation, soundproofing, and installation education.</p></article>
         <article class="card"><h3>Lead generation</h3><p>Contact and inquiry flow for WhatsApp, email, and CRM handoff.</p></article>
     </div>
@@ -40,7 +41,7 @@
 <section class="section">
     <div class="section-heading">
         <p class="eyebrow">Product sample</p>
-        <h2>Seed catalog</h2>
+        <h2>Featured catalog</h2>
     </div>
     <div class="card-grid three">
         <?php foreach ($products as $product): ?>
