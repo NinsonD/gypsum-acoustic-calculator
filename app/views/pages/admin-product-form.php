@@ -12,7 +12,7 @@ $isEdit = !empty($product['id']);
 
 <?php if (!empty($error)): ?><div class="notice error"><?= e($error); ?></div><?php endif; ?>
 
-<form class="panel admin-product-form" method="post" action="<?= e(url('/admin/products/save')); ?>">
+<form class="panel admin-product-form" method="post" enctype="multipart/form-data" action="<?= e(url('/admin/products/save')); ?>">
     <input type="hidden" name="_csrf" value="<?= e(csrf_token()); ?>">
     <input type="hidden" name="id" value="<?= e($product['id'] ?? ''); ?>">
 
@@ -77,6 +77,11 @@ $isEdit = !empty($product['id']);
             <input name="image" value="<?= e($product['image'] ?? ''); ?>" placeholder="/uploads/product.jpg">
         </label>
     </div>
+
+    <label>
+        <span>Upload image</span>
+        <input type="file" name="image_upload" accept=".jpg,.jpeg,.png,.webp,.gif">
+    </label>
 
     <label>
         <span>Specifications</span>

@@ -13,6 +13,7 @@ $router->get('/products/{slug}', [PageController::class, 'productDetail']);
 $router->get('/installation', [PageController::class, 'installation']);
 $router->get('/knowledge', [PageController::class, 'knowledge']);
 $router->get('/downloads', [PageController::class, 'downloads']);
+$router->get('/downloads/{slug}', [PageController::class, 'downloadFile']);
 $router->get('/contact', [PageController::class, 'contact']);
 $router->get('/admin/login', [AdminController::class, 'login']);
 $router->post('/admin/login', [AdminController::class, 'authenticate']);
@@ -31,6 +32,11 @@ $router->get('/admin/products/create', [AdminController::class, 'createProduct']
 $router->get('/admin/products/{id}/edit', [AdminController::class, 'editProduct']);
 $router->post('/admin/products/save', [AdminController::class, 'saveProduct']);
 $router->post('/admin/products/{id}/delete', [AdminController::class, 'deleteProduct']);
+$router->get('/admin/downloads', [AdminController::class, 'downloads']);
+$router->get('/admin/downloads/create', [AdminController::class, 'createDownload']);
+$router->get('/admin/downloads/{id}/edit', [AdminController::class, 'editDownload']);
+$router->post('/admin/downloads/save', [AdminController::class, 'saveDownload']);
+$router->post('/admin/downloads/{id}/delete', [AdminController::class, 'deleteDownload']);
 $router->get('/admin/boqs/{id}/export/{format}', [AdminController::class, 'exportBoq']);
 
 $router->post('/api/boq', [CalculatorController::class, 'boq']);

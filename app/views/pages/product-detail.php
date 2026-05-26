@@ -6,6 +6,9 @@
 
 <section class="detail-grid">
     <article class="panel">
+        <?php if (!empty($product['image'])): ?>
+            <img src="<?= e(url('/' . ltrim((string) $product['image'], '/'))); ?>" alt="<?= e($product['name']); ?>" style="width:100%;height:240px;object-fit:cover;border-radius:8px;margin-bottom:16px;">
+        <?php endif; ?>
         <div class="spec-row"><strong>Category</strong><span><?= e($product['category']); ?></span></div>
         <div class="spec-row"><strong>NRC</strong><span><?= e($product['nrc']); ?></span></div>
         <div class="spec-row"><strong>STC</strong><span><?= e($product['stc']); ?></span></div>

@@ -5,11 +5,15 @@ declare(strict_types=1);
 final class AdminController extends Controller
 {
     private ProductRepository $products;
+    private DownloadRepository $downloads;
+    private FileStorageService $files;
 
     public function __construct(array $config)
     {
         parent::__construct($config);
         $this->products = new ProductRepository($config);
+        $this->downloads = new DownloadRepository($config);
+        $this->files = new FileStorageService();
     }
 
     public function login(): void
@@ -224,6 +228,7 @@ final class AdminController extends Controller
     {
         Auth::requireAdmin($this->config);
         $data = $this->requestData();
+        $files = $this->requestFiles();
 
         if (!verify_csrf($data['_csrf'] ?? null)) {
             flash('error', 'Security token expired. Please try again.');
@@ -231,6 +236,29 @@ final class AdminController extends Controller
         }
 
         try {
+            $existing = null;
+            $id = (int) ($data['id'] ?? 0);
+            if ($id > 0) {
+                $existing = $this->products->productById($id);
+            }
+
+            $upload = $files['image_upload'] ?? null;
+            if (is_array($upload) && ($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                $stored = $this->files->upload(
+                    $upload,
+                    PUBLIC_PATH,
+                    'uploads/products',
+                    ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+                    10 * 1024 * 1024
+                );
+                $data['image'] = $stored['path'];
+                if ($existing && !empty($existing['image'])) {
+                    $this->files->delete(PUBLIC_PATH, (string) $existing['image']);
+                }
+            } elseif ($existing) {
+                $data['image'] = (string) ($data['image'] ?? $existing['image'] ?? '');
+            }
+
             $this->products->saveProduct($data);
             flash('success', 'Product saved.');
         } catch (Throwable $error) {
@@ -246,6 +274,10 @@ final class AdminController extends Controller
         $data = $this->requestData();
 
         if (verify_csrf($data['_csrf'] ?? null)) {
+            $product = $this->products->productById((int) $id);
+            if ($product !== null && !empty($product['image'])) {
+                $this->files->delete(PUBLIC_PATH, (string) $product['image']);
+            }
             $this->products->deleteProduct((int) $id);
             flash('success', 'Product deleted.');
         } else {
@@ -253,6 +285,104 @@ final class AdminController extends Controller
         }
 
         redirect_to('/admin/products');
+    }
+
+    public function downloads(): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $this->view('pages/admin-downloads', [
+            'title' => 'Downloads',
+            'description' => 'Manage downloadable technical files and BOQ resources.',
+            'user' => Auth::user($this->config),
+            'downloads' => $this->downloads->adminDownloads(),
+            'success' => flash('success'),
+            'error' => flash('error'),
+        ]);
+    }
+
+    public function createDownload(): void
+    {
+        Auth::requireAdmin($this->config);
+        $this->downloadForm(null);
+    }
+
+    public function editDownload(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+
+        $download = $this->downloads->downloadById((int) $id);
+        if ($download === null) {
+            flash('error', 'Download not found.');
+            redirect_to('/admin/downloads');
+        }
+
+        $this->downloadForm($download);
+    }
+
+    public function saveDownload(): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+        $files = $this->requestFiles();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/downloads');
+        }
+
+        try {
+            $existing = null;
+            $id = (int) ($data['id'] ?? 0);
+            if ($id > 0) {
+                $existing = $this->downloads->downloadById($id);
+            }
+
+            $upload = $files['file_upload'] ?? null;
+            if (is_array($upload) && ($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                $stored = $this->files->upload(
+                    $upload,
+                    PUBLIC_PATH,
+                    'uploads/downloads',
+                    ['pdf', 'xlsx', 'xls', 'docx', 'zip', 'dwg', 'jpg', 'jpeg', 'png'],
+                    25 * 1024 * 1024
+                );
+                $data['file_path'] = $stored['path'];
+                $data['file_type'] = strtoupper((string) $stored['extension']);
+                if ($existing && !empty($existing['file_path'])) {
+                    $this->files->delete(STORAGE_PATH, (string) $existing['file_path']);
+                }
+            } elseif ($existing) {
+                $data['file_path'] = $existing['file_path'];
+                $data['file_type'] = $existing['file_type'];
+            }
+
+            $this->downloads->saveDownload($data);
+            flash('success', 'Download saved.');
+        } catch (Throwable $error) {
+            flash('error', $error->getMessage());
+        }
+
+        redirect_to('/admin/downloads');
+    }
+
+    public function deleteDownload(string $id): void
+    {
+        Auth::requireAdmin($this->config);
+        $data = $this->requestData();
+
+        if (verify_csrf($data['_csrf'] ?? null)) {
+            $download = $this->downloads->downloadById((int) $id);
+            if ($download !== null && !empty($download['file_path'])) {
+                $this->files->delete(PUBLIC_PATH, (string) $download['file_path']);
+            }
+            $this->downloads->deleteDownload((int) $id);
+            flash('success', 'Download deleted.');
+        } else {
+            flash('error', 'Security token expired. Please try again.');
+        }
+
+        redirect_to('/admin/downloads');
     }
 
     public function inquiries(): void
@@ -350,6 +480,17 @@ final class AdminController extends Controller
             'product' => $product,
             'brands' => $this->products->brands(),
             'categories' => $this->products->categories(),
+            'error' => flash('error'),
+        ]);
+    }
+
+    private function downloadForm(?array $download): void
+    {
+        $this->view('pages/admin-download-form', [
+            'title' => $download === null ? 'Create Download' : 'Edit Download',
+            'description' => 'Upload downloadable technical resources.',
+            'user' => Auth::user($this->config),
+            'download' => $download,
             'error' => flash('error'),
         ]);
     }

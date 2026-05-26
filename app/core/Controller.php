@@ -34,6 +34,11 @@ abstract class Controller
         return $_POST;
     }
 
+    protected function requestFiles(): array
+    {
+        return $_FILES;
+    }
+
     protected function db(): PDO
     {
         return Database::connection($this->config);
