@@ -97,6 +97,14 @@ main,
     color: var(--blue-700);
 }
 
+.nav-user {
+    align-self: center;
+    color: var(--mint-600);
+    font-size: 12px;
+    font-weight: 800;
+    padding: 9px 4px;
+}
+
 .site-footer {
     display: flex;
     justify-content: space-between;
@@ -424,6 +432,56 @@ th {
     font-weight: 800;
 }
 
+.notice {
+    border-radius: 6px;
+    font-weight: 800;
+    margin: 12px 0;
+    padding: 12px;
+}
+
+.notice.error {
+    background: #ffe8e8;
+    color: #9a1c1c;
+}
+
+.login-shell {
+    display: grid;
+    min-height: 60vh;
+    place-items: center;
+    padding-top: 48px;
+}
+
+.login-panel {
+    max-width: 430px;
+    width: 100%;
+}
+
+.admin-heading {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 34px;
+    padding-bottom: 18px;
+}
+
+.admin-heading h1 {
+    margin: 8px 0 10px;
+    font-size: clamp(30px, 5vw, 46px);
+    line-height: 1.05;
+}
+
+.admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.admin-actions form {
+    margin: 0;
+}
+
 .is-hidden {
     display: none;
 }
@@ -505,6 +563,10 @@ th {
 
     .nav {
         justify-content: flex-start;
+    }
+
+    .admin-heading {
+        flex-direction: column;
     }
 
     .card-grid.two,

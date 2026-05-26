@@ -29,12 +29,32 @@ final class InquiryController extends Controller
             'created_at' => date('c'),
         ];
 
-        file_put_contents(STORAGE_PATH . '/logs/inquiries.log', json_encode($payload, JSON_UNESCAPED_SLASHES) . PHP_EOL, FILE_APPEND);
+        try {
+            $stmt = $this->db()->prepare(
+                'INSERT INTO inquiries (reference, customer_name, email, phone, inquiry_type, message, status)
+                 VALUES (:reference, :customer_name, :email, :phone, :inquiry_type, :message, :status)'
+            );
+            $stmt->execute([
+                'reference' => $reference,
+                'customer_name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'inquiry_type' => $type,
+                'message' => $message,
+                'status' => 'new',
+            ]);
+            $storage = 'database';
+        } catch (Throwable $error) {
+            $payload['error'] = $error->getMessage();
+            file_put_contents(STORAGE_PATH . '/logs/inquiries.log', json_encode($payload, JSON_UNESCAPED_SLASHES) . PHP_EOL, FILE_APPEND);
+            $storage = 'log';
+        }
 
         $this->json([
             'ok' => true,
             'message' => 'Inquiry received. Reference: ' . $reference,
             'reference' => $reference,
+            'storage' => $storage,
         ]);
     }
 }

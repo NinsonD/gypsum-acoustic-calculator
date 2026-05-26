@@ -79,6 +79,12 @@ function asset(string $path): string
     return url('/assets/' . ltrim($path, '/'));
 }
 
+function redirect_to(string $path): never
+{
+    header('Location: ' . url($path));
+    exit;
+}
+
 function csrf_token(): string
 {
     if (empty($_SESSION['_csrf'])) {

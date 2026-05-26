@@ -2,6 +2,14 @@
 $pageTitle = $title ?? $config['name'];
 $pageDescription = $description ?? 'Gypsum, drywall, acoustic, and BOQ engineering platform.';
 $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$basePath = base_path();
+
+if ($basePath !== '' && str_starts_with($currentPath, $basePath)) {
+    $currentPath = substr($currentPath, strlen($basePath)) ?: '/';
+}
+
+$currentPath = $currentPath === '/' ? '/' : rtrim($currentPath, '/');
+$adminUser = class_exists('Auth') ? Auth::user($config) : null;
 $nav = [
     '/calculators' => 'Calculators',
     '/products' => 'Products',
@@ -9,6 +17,7 @@ $nav = [
     '/knowledge' => 'Knowledge',
     '/downloads' => 'Downloads',
     '/contact' => 'Contact',
+    '/admin' => 'Admin',
 ];
 ?>
 <!doctype html>
@@ -31,8 +40,11 @@ $nav = [
         </a>
         <nav class="nav" aria-label="Primary navigation">
             <?php foreach ($nav as $path => $label): ?>
-                <a class="<?= $currentPath === $path ? 'active' : ''; ?>" href="<?= e(url($path)); ?>"><?= e($label); ?></a>
+                <a class="<?= $currentPath === $path || ($path === '/admin' && str_starts_with($currentPath, '/admin')) ? 'active' : ''; ?>" href="<?= e(url($path)); ?>"><?= e($label); ?></a>
             <?php endforeach; ?>
+            <?php if ($adminUser): ?>
+                <span class="nav-user"><?= e($adminUser['name']); ?></span>
+            <?php endif; ?>
         </nav>
     </header>
 

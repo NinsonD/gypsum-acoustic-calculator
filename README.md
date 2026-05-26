@@ -64,6 +64,14 @@ DB_PASS=
 
 Open `http://localhost/gypsum-acoustic/public_html/`.
 
+Create an admin user from the project root:
+
+```bash
+php database/create_admin.php admin@example.com "StrongPassword123!" "Super Admin"
+```
+
+Then open `http://localhost/gypsum-acoustic/public_html/admin/login`.
+
 ## Main Routes
 
 - `/` - engineering home and quick calculator
@@ -74,11 +82,14 @@ Open `http://localhost/gypsum-acoustic/public_html/`.
 - `/knowledge` - NRC/STC/acoustic education
 - `/downloads` - resource library placeholders
 - `/contact` - inquiry form
-- `/admin` - future protected admin module map
+- `/admin/login` - admin login
+- `/admin` - protected dashboard
+- `/admin/inquiries` - saved inquiries
+- `/admin/boqs` - saved calculator estimates
 
 ## API Endpoints
 
 - `POST /api/boq` - accepts calculator BOQ JSON
 - `POST /api/inquiries` - accepts contractor inquiry JSON or form data
 
-Both endpoints currently validate input and log early-stage payloads. Connect them to MySQL tables when production persistence is needed.
+Both endpoints validate input and save to MySQL. If the database is unavailable during early development, they fall back to `storage/logs`.

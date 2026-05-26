@@ -14,7 +14,12 @@ $router->get('/installation', [PageController::class, 'installation']);
 $router->get('/knowledge', [PageController::class, 'knowledge']);
 $router->get('/downloads', [PageController::class, 'downloads']);
 $router->get('/contact', [PageController::class, 'contact']);
-$router->get('/admin', [PageController::class, 'admin']);
+$router->get('/admin/login', [AdminController::class, 'login']);
+$router->post('/admin/login', [AdminController::class, 'authenticate']);
+$router->post('/admin/logout', [AdminController::class, 'logout']);
+$router->get('/admin', [AdminController::class, 'dashboard']);
+$router->get('/admin/inquiries', [AdminController::class, 'inquiries']);
+$router->get('/admin/boqs', [AdminController::class, 'boqs']);
 
 $router->post('/api/boq', [CalculatorController::class, 'boq']);
 $router->post('/api/inquiries', [InquiryController::class, 'store']);

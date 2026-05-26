@@ -33,4 +33,9 @@ abstract class Controller
 
         return $_POST;
     }
+
+    protected function db(): PDO
+    {
+        return Database::connection($this->config);
+    }
 }

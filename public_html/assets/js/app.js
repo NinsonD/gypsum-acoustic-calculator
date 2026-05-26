@@ -37,7 +37,9 @@
         var hangers = (Math.ceil(length / 1.2) + 1) * (Math.ceil(width / 1.2) + 1);
 
         return {
+            type: 'ceiling',
             title: 'Gypsum ceiling estimate',
+            area: area,
             summary: [
                 ['Area', area, 'sqm'],
                 ['Perimeter', perimeter, 'lm'],
@@ -82,7 +84,9 @@
         }
 
         return {
+            type: 'partition',
             title: 'Drywall partition estimate',
+            area: oneSideArea,
             summary: [
                 ['One side area', oneSideArea, 'sqm'],
                 ['Board area', totalBoardArea, 'sqm'],
@@ -105,7 +109,9 @@
         var crossRows = Math.ceil(length / 0.6) + 1;
 
         return {
+            type: 'tile',
             title: 'Acoustic ceiling tile estimate',
+            area: area,
             summary: [
                 ['Area', area, 'sqm'],
                 ['Tile size', tileSize.replace('x', ' x '), 'mm'],
@@ -138,7 +144,9 @@
         var treatment = round(required / nrc);
 
         return {
+            type: 'acoustic',
             title: 'Room acoustic treatment estimate',
+            area: treatment,
             summary: [
                 ['Volume', volume, 'cum'],
                 ['Target RT', target, 'sec'],
@@ -203,6 +211,9 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     project_name: form.elements.project_name.value,
+                    calculator_type: currentResult.type,
+                    area: currentResult.area,
+                    summary: currentResult.summary,
                     items: currentResult.items
                 })
             })
