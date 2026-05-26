@@ -66,7 +66,6 @@
             <button class="button" type="button" data-save-boq>Save BOQ</button>
             <button class="button" type="button" data-export-boq="csv">Download Excel</button>
             <button class="button" type="button" data-export-boq="pdf">Download PDF</button>
-            <button class="button" type="button" data-download-boq>Download JSON</button>
         </div>
     </form>
 

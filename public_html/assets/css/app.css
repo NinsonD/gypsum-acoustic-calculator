@@ -13,6 +13,9 @@
     --mint-600: #16875a;
     --mint-100: #dff7ea;
     --white: #ffffff;
+    --shadow-sm: 0 8px 24px rgba(17, 24, 32, 0.07);
+    --shadow-md: 0 16px 40px rgba(17, 24, 32, 0.10);
+    --radius: 8px;
 }
 
 * {
@@ -21,9 +24,14 @@
 
 body {
     margin: 0;
-    background: linear-gradient(180deg, #f8fafc 0%, #eef3f7 100%);
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top right, rgba(38, 120, 200, 0.06), transparent 35%),
+        radial-gradient(circle at left top, rgba(184, 109, 19, 0.05), transparent 28%),
+        linear-gradient(180deg, #f8fafc 0%, #eef3f7 100%);
     color: var(--graphite-900);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Segoe UI", Inter, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
 }
 
 a {
@@ -39,6 +47,20 @@ main,
     padding-right: max(18px, calc((100vw - 1180px) / 2));
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 24px;
+    padding-bottom: 72px;
+}
+
+main > * {
+    width: min(1180px, calc(100vw - 36px));
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .site-header {
     position: sticky;
     top: 0;
@@ -49,7 +71,9 @@ main,
     gap: 20px;
     min-height: 72px;
     border-bottom: 1px solid var(--graphite-100);
-    background: rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 rgba(17, 24, 32, 0.03);
 }
 
 .brand {
@@ -66,7 +90,7 @@ main,
     height: 42px;
     place-items: center;
     border-radius: 8px;
-    background: var(--graphite-900);
+    background: linear-gradient(135deg, var(--graphite-900), var(--blue-700));
     color: var(--white);
     font-weight: 800;
 }
@@ -85,10 +109,11 @@ main,
 }
 
 .nav a {
-    border-radius: 6px;
+    border-radius: 8px;
     color: var(--graphite-800);
     font-size: 14px;
     padding: 9px 11px;
+    transition: background-color 0.16s ease, color 0.16s ease, transform 0.16s ease;
 }
 
 .nav a:hover,
@@ -130,8 +155,13 @@ main,
     display: grid;
     grid-template-columns: minmax(0, 1fr) 430px;
     gap: 28px;
-    padding-top: 36px;
-    padding-bottom: 28px;
+    padding-top: 10px;
+    padding-bottom: 8px;
+    align-items: center;
+}
+
+.hero-copy {
+    max-width: 620px;
 }
 
 .hero h1,
@@ -265,9 +295,10 @@ label span {
 .panel,
 .card {
     border: 1px solid var(--graphite-100);
-    border-radius: 8px;
+    border-radius: var(--radius);
     background: var(--white);
-    box-shadow: 0 12px 32px rgba(17, 24, 32, 0.07);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 .panel {
@@ -288,6 +319,17 @@ label span {
 
 .card {
     padding: 20px;
+    border-top: 3px solid transparent;
+}
+
+.panel:hover,
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.card:hover {
+    border-top-color: var(--blue-500);
 }
 
 .card-grid {
@@ -315,6 +357,31 @@ label span {
     gap: 14px;
 }
 
+.media-card {
+    display: block;
+    width: 100%;
+    background: var(--graphite-50);
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+}
+
+.media-card.sm {
+    height: 180px;
+}
+
+.media-card.md {
+    height: 200px;
+}
+
+.media-card.lg {
+    height: 240px;
+}
+
+.media-card.xl {
+    height: 260px;
+}
+
 label {
     display: grid;
     gap: 7px;
@@ -325,7 +392,7 @@ select,
 textarea {
     width: 100%;
     border: 1px solid var(--graphite-100);
-    border-radius: 6px;
+    border-radius: var(--radius);
     background: var(--white);
     color: var(--graphite-900);
     font: inherit;
@@ -362,22 +429,25 @@ textarea:focus {
     justify-content: center;
     min-height: 42px;
     border: 1px solid var(--graphite-100);
-    border-radius: 6px;
+    border-radius: var(--radius);
     background: var(--white);
     color: var(--graphite-900);
     cursor: pointer;
     font-weight: 800;
     padding: 10px 15px;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
 }
 
 .button.primary {
     border-color: var(--blue-600);
     background: var(--blue-600);
     color: var(--white);
+    box-shadow: 0 10px 24px rgba(23, 101, 172, 0.18);
 }
 
 .button:hover {
     border-color: var(--blue-500);
+    transform: translateY(-1px);
 }
 
 .summary-grid {
@@ -388,8 +458,9 @@ textarea:focus {
 }
 
 .summary-item {
-    border-radius: 6px;
-    background: var(--blue-50);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--blue-500);
+    background: linear-gradient(180deg, #ffffff 0%, var(--blue-50) 100%);
     padding: 14px;
 }
 
@@ -402,7 +473,9 @@ textarea:focus {
 .table-wrap {
     overflow-x: auto;
     border: 1px solid var(--graphite-100);
-    border-radius: 8px;
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
 }
 
 table {
@@ -425,6 +498,12 @@ th {
     color: var(--graphite-600);
     font-size: 12px;
     text-transform: uppercase;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .status-message {
@@ -481,6 +560,10 @@ th {
     flex-wrap: wrap;
     gap: 8px;
     justify-content: flex-end;
+    padding: 10px;
+    border: 1px solid var(--graphite-100);
+    border-radius: var(--radius);
+    background: rgba(245, 247, 248, 0.92);
 }
 
 .admin-actions form {
@@ -565,7 +648,7 @@ th {
 
 .step {
     border: 1px solid var(--graphite-100);
-    border-radius: 6px;
+    border-radius: var(--radius);
     padding: 12px;
 }
 

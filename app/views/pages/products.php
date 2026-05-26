@@ -8,7 +8,7 @@
     <?php foreach ($products as $product): ?>
         <article class="card">
             <?php if (!empty($product['image'])): ?>
-                <img src="<?= e(url('/' . ltrim((string) $product['image'], '/'))); ?>" alt="<?= e($product['name']); ?>" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+                <img class="media-card sm" src="<?= e(url('/' . ltrim((string) $product['image'], '/'))); ?>" alt="<?= e($product['name']); ?>">
             <?php endif; ?>
             <p class="tag"><?= e($product['category']); ?></p>
             <h2><?= e($product['name']); ?></h2>

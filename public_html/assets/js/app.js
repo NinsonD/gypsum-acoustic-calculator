@@ -293,19 +293,6 @@
             });
         });
 
-        root.querySelector('[data-download-boq]').addEventListener('click', function () {
-            if (!currentResult) {
-                calculate();
-            }
-
-            var blob = new Blob([JSON.stringify(currentResult, null, 2)], { type: 'application/json' });
-            var link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'boq-estimate.json';
-            link.click();
-            URL.revokeObjectURL(link.href);
-        });
-
         updateSections();
         calculate();
     }

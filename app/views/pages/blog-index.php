@@ -8,7 +8,7 @@
     <?php foreach ($posts as $post): ?>
         <article class="card">
             <?php if (!empty($post['image'])): ?>
-                <img src="<?= e(url('/' . ltrim((string) $post['image'], '/'))); ?>" alt="<?= e($post['title']); ?>" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+                <img class="media-card sm" src="<?= e(url('/' . ltrim((string) $post['image'], '/'))); ?>" alt="<?= e($post['title']); ?>">
             <?php endif; ?>
             <p class="tag"><?= e($post['status']); ?></p>
             <h2><?= e($post['title']); ?></h2>

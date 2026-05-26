@@ -7,7 +7,7 @@
 <section class="card-grid three">
     <?php foreach ($items as $item): ?>
         <article class="card">
-            <img src="<?= e($item['image_url']); ?>" alt="<?= e($item['title']); ?>" style="width:100%;height:200px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <img class="media-card md" src="<?= e($item['image_url']); ?>" alt="<?= e($item['title']); ?>">
             <p class="tag"><?= e($item['category'] ?: 'Project'); ?></p>
             <h2><?= e($item['title']); ?></h2>
             <p class="muted"><?= e($item['project_name'] ?: 'Reference project'); ?></p>

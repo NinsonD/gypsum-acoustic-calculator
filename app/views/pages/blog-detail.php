@@ -7,7 +7,7 @@
 <section class="detail-grid">
     <article class="panel">
         <?php if (!empty($post['image'])): ?>
-            <img src="<?= e(url('/' . ltrim((string) $post['image'], '/'))); ?>" alt="<?= e($post['title']); ?>" style="width:100%;height:260px;object-fit:cover;border-radius:8px;margin-bottom:16px;">
+            <img class="media-card xl" src="<?= e(url('/' . ltrim((string) $post['image'], '/'))); ?>" alt="<?= e($post['title']); ?>">
         <?php endif; ?>
         <?php foreach (preg_split("/\r\n\r\n|\n\n|\r\r/", trim((string) $post['content'])) ?: [] as $paragraph): ?>
             <p><?= e(trim($paragraph)); ?></p>
