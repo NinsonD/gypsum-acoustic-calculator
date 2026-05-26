@@ -1,0 +1,10 @@
+.env
+*.log
+node_modules
+.next
+storage/logs/*
+!storage/logs/.gitkeep
+public_html/uploads/*
+!public_html/uploads/.gitkeep
+*.zip
+*.sql.gz
