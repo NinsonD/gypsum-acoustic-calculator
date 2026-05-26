@@ -1,7 +1,7 @@
 <section class="page-heading">
     <p class="eyebrow">Admin foundation</p>
     <h1>Protected dashboard modules</h1>
-    <p>This page is a map only. Add login, roles, CSRF checks, and route protection before exposing admin tools in production.</p>
+    <p>Overview of the live admin modules: leads, BOQs, products, blogs, downloads, gallery, and user access control.</p>
 </section>
 
 <section class="card-grid four">

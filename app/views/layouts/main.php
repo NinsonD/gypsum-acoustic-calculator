@@ -9,12 +9,30 @@ if ($basePath !== '' && str_starts_with($currentPath, $basePath)) {
 }
 
 $currentPath = $currentPath === '/' ? '/' : rtrim($currentPath, '/');
+$pageCanonical = $canonical ?? url($currentPath);
+$pageRobots = $robots ?? (str_starts_with($currentPath, '/admin') ? 'noindex,nofollow' : 'index,follow');
+$pageOgImage = $og_image ?? asset('images/og-default.svg');
+$pageOgType = $og_type ?? (is_array($schema ?? null) && (($schema['@type'] ?? '') === 'Article') ? 'article' : 'website');
 $adminUser = class_exists('Auth') ? Auth::user($config) : null;
+$siteSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'WebSite',
+    'name' => $config['name'],
+    'url' => $config['url'],
+];
+$organizationSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'LocalBusiness',
+    'name' => $config['name'],
+    'url' => $config['url'],
+    'description' => $pageDescription,
+];
 $nav = [
     '/calculators' => 'Calculators',
     '/products' => 'Products',
     '/blog' => 'Blog',
     '/installation' => 'Installation',
+    '/gallery' => 'Gallery',
     '/knowledge' => 'Knowledge',
     '/downloads' => 'Downloads',
     '/contact' => 'Contact',
@@ -28,7 +46,21 @@ $nav = [
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($pageTitle); ?> | <?= e($config['name']); ?></title>
     <meta name="description" content="<?= e($pageDescription); ?>">
+    <meta name="robots" content="<?= e($pageRobots); ?>">
+    <link rel="canonical" href="<?= e($pageCanonical); ?>">
+    <meta property="og:site_name" content="<?= e($config['name']); ?>">
+    <meta property="og:title" content="<?= e($pageTitle); ?>">
+    <meta property="og:description" content="<?= e($pageDescription); ?>">
+    <meta property="og:type" content="<?= e($pageOgType); ?>">
+    <meta property="og:url" content="<?= e($pageCanonical); ?>">
+    <meta property="og:image" content="<?= e($pageOgImage); ?>">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="<?= e(asset('css/app.css')); ?>">
+    <script type="application/ld+json"><?= json_encode($siteSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?></script>
+    <script type="application/ld+json"><?= json_encode($organizationSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?></script>
+    <?php if (!empty($schema)): ?>
+        <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?></script>
+    <?php endif; ?>
 </head>
 <body data-base-path="<?= e(base_path()); ?>">
     <header class="site-header">
@@ -62,6 +94,7 @@ $nav = [
             <a href="<?= e(url('/calculators')); ?>">Material calculators</a>
             <a href="<?= e(url('/products')); ?>">Product catalog</a>
             <a href="<?= e(url('/blog')); ?>">Blog</a>
+            <a href="<?= e(url('/gallery')); ?>">Gallery</a>
             <a href="<?= e(url('/admin')); ?>">Admin structure</a>
         </div>
     </footer>

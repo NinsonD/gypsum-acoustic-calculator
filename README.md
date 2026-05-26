@@ -76,6 +76,18 @@ Seed the starter catalog:
 php database/seed_catalog.php
 ```
 
+Seed the starter blog posts:
+
+```bash
+php database/seed_blogs.php
+```
+
+Seed the starter gallery items:
+
+```bash
+php database/seed_gallery.php
+```
+
 Then open `http://localhost/gypsum-acoustic/public_html/admin/login`.
 
 ## Main Routes
@@ -86,6 +98,9 @@ Then open `http://localhost/gypsum-acoustic/public_html/admin/login`.
 - `/products/{slug}` - product detail page
 - `/installation` - installation method references
 - `/knowledge` - NRC/STC/acoustic education
+- `/blog` - SEO blog index
+- `/blog/{slug}` - blog article detail
+- `/gallery` - project gallery
 - `/downloads` - resource library placeholders
 - `/contact` - inquiry form
 - `/admin/login` - admin login
@@ -95,6 +110,10 @@ Then open `http://localhost/gypsum-acoustic/public_html/admin/login`.
 - `/admin/brands` - brand management
 - `/admin/categories` - category management
 - `/admin/products` - product catalog management
+- `/admin/blogs` - blog management
+- `/admin/downloads` - download management
+- `/admin/gallery` - gallery management
+- `/admin/users` - admin and role management
 
 ## API Endpoints
 
@@ -102,3 +121,16 @@ Then open `http://localhost/gypsum-acoustic/public_html/admin/login`.
 - `POST /api/inquiries` - accepts contractor inquiry JSON or form data
 
 Both endpoints validate input and save to MySQL. If the database is unavailable during early development, they fall back to `storage/logs`.
+
+## Maintenance Scripts
+
+- `php scripts/generate_sitemap.php` - rebuilds `public_html/sitemap.xml`
+- `php scripts/backup.php` - creates a timestamped backup under `storage/backups`
+- `php scripts/restore.php <backup-json>` - restores a backup snapshot into MySQL
+
+## Production Notes
+
+- Keep `public_html/` as the web root on cPanel.
+- Keep `app/`, `database/`, `scripts/`, and `storage/` outside the public web root when possible.
+- Set `APP_URL`, `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `ADMIN_EMAIL`, and `WHATSAPP_NUMBER` in `.env`.
+- Regenerate the sitemap after publishing new pages or posts.

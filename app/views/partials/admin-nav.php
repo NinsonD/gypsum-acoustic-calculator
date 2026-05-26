@@ -15,6 +15,9 @@
     <?php if (Auth::hasPermission($config, 'downloads')): ?>
         <a class="button <?= ($active ?? '') === 'downloads' ? 'primary' : ''; ?>" href="<?= e(url('/admin/downloads')); ?>">Downloads</a>
     <?php endif; ?>
+    <?php if (Auth::hasPermission($config, 'gallery')): ?>
+        <a class="button <?= ($active ?? '') === 'gallery' ? 'primary' : ''; ?>" href="<?= e(url('/admin/gallery')); ?>">Gallery</a>
+    <?php endif; ?>
     <?php if (Auth::hasPermission($config, 'users')): ?>
         <a class="button <?= ($active ?? '') === 'users' ? 'primary' : ''; ?>" href="<?= e(url('/admin/users')); ?>">Users</a>
     <?php endif; ?>

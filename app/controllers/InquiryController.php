@@ -28,6 +28,7 @@ final class InquiryController extends Controller
             'message' => $message,
             'created_at' => date('c'),
         ];
+        $notification = ['delivery' => 'log', 'whatsapp_url' => ''];
 
         try {
             $stmt = $this->db()->prepare(
@@ -44,6 +45,8 @@ final class InquiryController extends Controller
                 'status' => 'new',
             ]);
             $storage = 'database';
+
+            $notification = (new NotificationService($this->config))->inquiry($payload);
         } catch (Throwable $error) {
             $payload['error'] = $error->getMessage();
             file_put_contents(STORAGE_PATH . '/logs/inquiries.log', json_encode($payload, JSON_UNESCAPED_SLASHES) . PHP_EOL, FILE_APPEND);
@@ -55,6 +58,7 @@ final class InquiryController extends Controller
             'message' => 'Inquiry received. Reference: ' . $reference,
             'reference' => $reference,
             'storage' => $storage,
+            'notification' => $notification,
         ]);
     }
 }

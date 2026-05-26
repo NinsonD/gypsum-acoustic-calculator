@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Gypsum and Acoustic Engineering Systems">
+  <rect width="1200" height="630" fill="#111820"/>
+  <rect x="70" y="70" width="1060" height="490" rx="24" fill="#f5f7f8"/>
+  <rect x="120" y="120" width="360" height="80" rx="10" fill="#164f85"/>
+  <rect x="120" y="230" width="560" height="18" rx="9" fill="#2678c8"/>
+  <rect x="120" y="280" width="460" height="18" rx="9" fill="#b86d13"/>
+  <rect x="120" y="340" width="680" height="18" rx="9" fill="#5b6773"/>
+  <rect x="120" y="400" width="320" height="18" rx="9" fill="#164f85"/>
+  <text x="120" y="182" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="700" fill="#ffffff">Gypsum &amp; Acoustic Engineering Systems</text>
+  <text x="120" y="498" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#111820">Calculator, BOQ, catalog, downloads, and technical content</text>
+</svg>

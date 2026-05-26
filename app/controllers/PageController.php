@@ -8,6 +8,7 @@ final class PageController extends Controller
     private ProductRepository $products;
     private DownloadRepository $downloads;
     private BlogRepository $blogs;
+    private GalleryRepository $gallery;
 
     public function __construct(array $config)
     {
@@ -16,6 +17,7 @@ final class PageController extends Controller
         $this->products = new ProductRepository($config);
         $this->downloads = new DownloadRepository($config);
         $this->blogs = new BlogRepository($config);
+        $this->gallery = new GalleryRepository($config);
     }
 
     public function home(): void
@@ -24,6 +26,13 @@ final class PageController extends Controller
             'title' => 'Gypsum & Acoustic Engineering Systems',
             'description' => 'Gypsum ceiling, drywall partition, acoustic calculator, BOQ, and contractor lead platform.',
             'products' => array_slice($this->catalogProducts(), 0, 3),
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'WebPage',
+                'name' => 'Gypsum & Acoustic Engineering Systems',
+                'description' => 'Gypsum ceiling, drywall partition, acoustic calculator, BOQ, and contractor lead platform.',
+                'url' => url('/'),
+            ],
         ]);
     }
 
@@ -41,6 +50,12 @@ final class PageController extends Controller
             'title' => 'Product Catalog',
             'description' => 'Gypsum, drywall, acoustic, insulation, and soundproofing system catalog.',
             'products' => $this->catalogProducts(),
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'CollectionPage',
+                'name' => 'Product Catalog',
+                'url' => url('/products'),
+            ],
         ]);
     }
 
@@ -64,6 +79,20 @@ final class PageController extends Controller
             'title' => $product['name'],
             'description' => $product['summary'],
             'product' => $product,
+            'og_image' => !empty($product['image']) ? url('/' . ltrim((string) $product['image'], '/')) : asset('images/og-default.svg'),
+            'og_type' => 'product',
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'Product',
+                'name' => $product['name'],
+                'description' => $product['description'] ?: $product['summary'],
+                'brand' => [
+                    '@type' => 'Brand',
+                    'name' => $product['brand']['name'] ?? 'Manufacturer',
+                ],
+                'category' => $product['category'],
+                'image' => !empty($product['image']) ? [url('/' . ltrim((string) $product['image'], '/'))] : [],
+            ],
         ]);
     }
 
@@ -81,6 +110,35 @@ final class PageController extends Controller
         $this->view('pages/knowledge', [
             'title' => 'Acoustic Knowledge Center',
             'description' => 'NRC, STC, reverberation, echo reduction, and soundproofing guidance.',
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'WebPage',
+                'name' => 'Acoustic Knowledge Center',
+                'url' => url('/knowledge'),
+            ],
+        ]);
+    }
+
+    public function gallery(): void
+    {
+        $items = [];
+        try {
+            $items = $this->gallery->publicItems();
+        } catch (Throwable) {
+            $items = [];
+        }
+
+        $this->view('pages/gallery', [
+            'title' => 'Project Gallery',
+            'description' => 'Installed gypsum, drywall, acoustic, and technical project reference images.',
+            'items' => $items,
+            'og_image' => !empty($items[0]['image_url']) ? $items[0]['image_url'] : asset('images/og-default.svg'),
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'ImageGallery',
+                'name' => 'Project Gallery',
+                'url' => url('/gallery'),
+            ],
         ]);
     }
 
@@ -109,6 +167,12 @@ final class PageController extends Controller
             'title' => 'Download Center',
             'description' => 'Technical resources, method statements, BOQ templates, and CAD placeholders.',
             'downloads' => $downloads,
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'CollectionPage',
+                'name' => 'Download Center',
+                'url' => url('/downloads'),
+            ],
         ]);
     }
 
@@ -151,6 +215,12 @@ final class PageController extends Controller
             'title' => 'Blog',
             'description' => 'SEO articles for gypsum ceiling UAE, drywall partition Dubai, acoustic ceilings, and soundproofing.',
             'posts' => $posts,
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'Blog',
+                'name' => 'Blog',
+                'url' => url('/blog'),
+            ],
         ]);
     }
 
@@ -174,6 +244,20 @@ final class PageController extends Controller
             'title' => $post['meta_title'] ?: $post['title'],
             'description' => $post['meta_description'] ?: $post['excerpt'],
             'post' => $post,
+            'og_image' => !empty($post['image']) ? url('/' . ltrim((string) $post['image'], '/')) : asset('images/og-default.svg'),
+            'og_type' => 'article',
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'Article',
+                'headline' => $post['meta_title'] ?: $post['title'],
+                'description' => $post['meta_description'] ?: $post['excerpt'],
+                'author' => [
+                    '@type' => 'Person',
+                    'name' => $post['author_name'] ?? 'Staff',
+                ],
+                'image' => !empty($post['image']) ? [url('/' . ltrim((string) $post['image'], '/'))] : [],
+                'mainEntityOfPage' => url('/blog/' . $post['slug']),
+            ],
         ]);
     }
 

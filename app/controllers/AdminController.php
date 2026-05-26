@@ -8,6 +8,7 @@ final class AdminController extends Controller
     private DownloadRepository $downloads;
     private BlogRepository $blogs;
     private UserRepository $users;
+    private GalleryRepository $gallery;
     private FileStorageService $files;
 
     public function __construct(array $config)
@@ -17,6 +18,7 @@ final class AdminController extends Controller
         $this->downloads = new DownloadRepository($config);
         $this->blogs = new BlogRepository($config);
         $this->users = new UserRepository($config);
+        $this->gallery = new GalleryRepository($config);
         $this->files = new FileStorageService();
     }
 
@@ -505,6 +507,102 @@ final class AdminController extends Controller
         ]);
     }
 
+    public function gallery(): void
+    {
+        Auth::requirePermission($this->config, 'gallery');
+
+        $this->view('pages/admin-gallery', [
+            'title' => 'Gallery',
+            'description' => 'Manage project photos and technical reference images.',
+            'user' => Auth::user($this->config),
+            'items' => $this->gallery->adminItems(),
+            'success' => flash('success'),
+            'error' => flash('error'),
+        ]);
+    }
+
+    public function createGallery(): void
+    {
+        Auth::requirePermission($this->config, 'gallery');
+        $this->galleryForm(null);
+    }
+
+    public function editGallery(string $id): void
+    {
+        Auth::requirePermission($this->config, 'gallery');
+
+        $item = $this->gallery->itemById((int) $id);
+        if ($item === null) {
+            flash('error', 'Gallery item not found.');
+            redirect_to('/admin/gallery');
+        }
+
+        $this->galleryForm($item);
+    }
+
+    public function saveGallery(): void
+    {
+        Auth::requirePermission($this->config, 'gallery');
+        $data = $this->requestData();
+        $files = $this->requestFiles();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/gallery');
+        }
+
+        try {
+            $existing = null;
+            $id = (int) ($data['id'] ?? 0);
+            if ($id > 0) {
+                $existing = $this->gallery->itemById($id);
+            }
+
+            $upload = $files['image_upload'] ?? null;
+            if (is_array($upload) && ($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                $stored = $this->files->upload(
+                    $upload,
+                    PUBLIC_PATH,
+                    'uploads/gallery',
+                    ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+                    10 * 1024 * 1024
+                );
+                $data['image'] = $stored['path'];
+                if ($existing && !empty($existing['image'])) {
+                    $this->files->delete(PUBLIC_PATH, (string) $existing['image']);
+                }
+            } elseif ($existing) {
+                $data['image'] = (string) ($data['image'] ?? $existing['image'] ?? '');
+            }
+
+            $this->gallery->saveItem($data);
+            flash('success', 'Gallery item saved.');
+        } catch (Throwable $error) {
+            flash('error', $error->getMessage());
+        }
+
+        redirect_to('/admin/gallery');
+    }
+
+    public function deleteGallery(string $id): void
+    {
+        Auth::requirePermission($this->config, 'gallery');
+        $data = $this->requestData();
+
+        if (!verify_csrf($data['_csrf'] ?? null)) {
+            flash('error', 'Security token expired. Please try again.');
+            redirect_to('/admin/gallery');
+        }
+
+        $item = $this->gallery->itemById((int) $id);
+        if ($item !== null && !empty($item['image'])) {
+            $this->files->delete(PUBLIC_PATH, (string) $item['image']);
+        }
+        $this->gallery->deleteItem((int) $id);
+        flash('success', 'Gallery item deleted.');
+        redirect_to('/admin/gallery');
+    }
+
     public function createUser(): void
     {
         Auth::requirePermission($this->config, 'users');
@@ -729,6 +827,17 @@ final class AdminController extends Controller
             'user' => Auth::user($this->config),
             'account' => $user,
             'roles' => $this->users->roles(),
+            'error' => flash('error'),
+        ]);
+    }
+
+    private function galleryForm(?array $item): void
+    {
+        $this->view('pages/admin-gallery-form', [
+            'title' => $item === null ? 'Create Gallery Item' : 'Edit Gallery Item',
+            'description' => 'Upload project photos and technical reference images.',
+            'user' => Auth::user($this->config),
+            'item' => $item,
             'error' => flash('error'),
         ]);
     }

@@ -91,6 +91,20 @@ CREATE TABLE IF NOT EXISTS downloads (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS gallery_items (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(180) NOT NULL,
+    slug VARCHAR(200) NOT NULL UNIQUE,
+    summary VARCHAR(255) NULL,
+    image VARCHAR(255) NOT NULL,
+    project_name VARCHAR(180) NULL,
+    category VARCHAR(120) NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    is_public TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_gallery_public_sort (is_public, sort_order, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS inquiries (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     reference VARCHAR(40) NULL UNIQUE,
@@ -120,7 +134,7 @@ CREATE TABLE IF NOT EXISTS boq_estimations (
 
 INSERT IGNORE INTO roles (role_name, permissions) VALUES
 ('Super Admin', JSON_ARRAY('all')),
-('Admin', JSON_ARRAY('products', 'leads', 'blog', 'downloads')),
-('Editor', JSON_ARRAY('blog', 'downloads')),
+('Admin', JSON_ARRAY('products', 'leads', 'blog', 'downloads', 'gallery', 'users')),
+('Editor', JSON_ARRAY('blog', 'downloads', 'gallery')),
 ('Contractor', JSON_ARRAY('calculations')),
 ('Public User', JSON_ARRAY());

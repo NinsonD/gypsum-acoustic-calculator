@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>/</loc></url>
-  <url><loc>/calculators</loc></url>
-  <url><loc>/products</loc></url>
-  <url><loc>/blog</loc></url>
-  <url><loc>/installation</loc></url>
-  <url><loc>/knowledge</loc></url>
-  <url><loc>/downloads</loc></url>
-  <url><loc>/contact</loc></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/calculators</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/products</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/blog</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/gallery</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/installation</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/knowledge</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/downloads</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/contact</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/products/standard-gypsum-ceiling-system</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/products/perforated-acoustic-gypsum-ceiling</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/products/mineral-fiber-acoustic-ceiling-tile</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/products/standard-drywall-partition</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/products/rockwool-insulated-acoustic-partition</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/products/moisture-resistant-gypsum-board</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/blog/gypsum-ceiling-uae-how-to-choose-the-right-system</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/blog/drywall-partition-dubai-what-contractors-need-to-check</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/blog/acoustic-ceiling-sharjah-nrc-and-echo-control-basics</loc><lastmod>2026-05-26</lastmod></url>
+  <url><loc>http://localhost/gypsum-acoustic/public_html/gallery</loc><lastmod>2026-05-26</lastmod></url>
 </urlset>
