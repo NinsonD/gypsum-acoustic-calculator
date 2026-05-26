@@ -230,6 +230,7 @@
             currentResult = mode.value === 'partition' ? partition(form) : mode.value === 'tile' ? tile(form) : mode.value === 'acoustic' ? acoustic(form) : ceiling(form);
             render(root, currentResult);
             status.textContent = currentResult.title + ' generated.';
+            return currentResult;
         }
 
         mode.addEventListener('change', function () {
@@ -245,15 +246,30 @@
             });
         }
 
+        form.querySelectorAll('input, select, textarea').forEach(function (field) {
+            field.addEventListener('input', function () {
+                calculate();
+            });
+
+            field.addEventListener('change', function () {
+                if (field === mode || field === tileSystem) {
+                    return;
+                }
+
+                calculate();
+            });
+        });
+
         form.addEventListener('submit', function (event) {
             event.preventDefault();
             calculate();
         });
 
         root.querySelector('[data-save-boq]').addEventListener('click', function () {
-            if (!currentResult) {
-                calculate();
-            }
+            var saveButton = this;
+            currentResult = calculate();
+            saveButton.disabled = true;
+            status.textContent = 'Saving BOQ...';
 
             fetch(endpoint('/api/boq'), {
                 method: 'POST',
@@ -266,9 +282,24 @@
                     items: currentResult.items
                 })
             })
-                .then(function (response) { return response.json(); })
-                .then(function (data) { status.textContent = data.message || 'BOQ saved.'; })
-                .catch(function () { status.textContent = 'Unable to save BOQ.'; });
+                .then(function (response) {
+                    return response.json().then(function (data) {
+                        if (!response.ok || !data.ok) {
+                            throw new Error(data.message || 'Unable to save BOQ.');
+                        }
+
+                        return data;
+                    });
+                })
+                .then(function (data) {
+                    status.textContent = data.message + ' Reference: ' + data.reference + '.';
+                })
+                .catch(function (error) {
+                    status.textContent = error && error.message ? error.message : 'Unable to save BOQ.';
+                })
+                .finally(function () {
+                    saveButton.disabled = false;
+                });
         });
 
         function exportBoq(format) {
