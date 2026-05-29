@@ -14,7 +14,6 @@
     <div class="button-row admin-top-actions">
         <a class="button primary" href="<?= e(url('/admin/products/create')); ?>">Add product</a>
         <a class="button" href="<?= e(url('/admin/brands')); ?>">Manage brands</a>
-        <a class="button" href="<?= e(url('/admin/categories')); ?>">Manage categories</a>
     </div>
     <div class="table-wrap">
         <table>

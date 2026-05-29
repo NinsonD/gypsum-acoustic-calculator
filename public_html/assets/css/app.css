@@ -335,6 +335,7 @@ label span {
 .card-grid {
     display: grid;
     gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .card-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -465,6 +466,13 @@ textarea:focus {
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 8px;
+    align-items: stretch;
+    width: 100%;
+}
+
+.button-row .button,
+.button-row form {
+    flex: 1 1 180px;
 }
 
 .button {
@@ -496,7 +504,7 @@ textarea:focus {
 
 .summary-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 12px;
     margin: 20px 0;
 }
@@ -524,7 +532,7 @@ textarea:focus {
 
 table {
     width: 100%;
-    min-width: 720px;
+    min-width: 640px;
     border-collapse: collapse;
     font-size: 14px;
 }
@@ -807,6 +815,11 @@ thead th {
         right: auto;
     }
 
+    .button-row .button,
+    .button-row form {
+        flex-basis: 220px;
+    }
+
     .hero,
     .detail-grid {
         grid-template-columns: 1fr;
@@ -848,6 +861,10 @@ thead th {
         gap: 18px;
     }
 
+    .hero-copy {
+        max-width: 100%;
+    }
+
     .estimator-header {
         grid-template-columns: 1fr;
         margin-bottom: 4px;
@@ -886,6 +903,16 @@ thead th {
         box-shadow: none;
     }
 
+    .button-row {
+        flex-direction: column;
+    }
+
+    .button-row .button,
+    .button-row form {
+        width: 100%;
+        flex-basis: auto;
+    }
+
     .admin-actions {
         gap: 10px;
     }
@@ -910,10 +937,27 @@ thead th {
     .spec-row {
         grid-template-columns: 1fr;
     }
+
+    table {
+        min-width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
     .admin-action-grid {
         grid-template-columns: 1fr;
+    }
+
+    .nav-summary {
+        font-size: 13px;
+    }
+
+    .brand strong {
+        font-size: 14px;
+    }
+
+    .hero h1,
+    .page-heading h1 {
+        font-size: clamp(30px, 10vw, 42px);
     }
 }
