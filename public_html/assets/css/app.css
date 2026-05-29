@@ -430,10 +430,11 @@ label span {
 }
 
 .estimator-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+    align-items: start;
+    gap: 18px 24px;
+    margin-bottom: 6px;
 }
 
 .estimator-header > div:first-child {
@@ -447,6 +448,10 @@ label span {
     justify-items: end;
     width: min(360px, 100%);
     margin-left: auto;
+}
+
+.estimator-header h2 {
+    margin-bottom: 4px;
 }
 
 .estimator-visual img {
@@ -919,7 +924,8 @@ thead th {
     }
 
     .estimator-header {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        margin-bottom: 4px;
     }
 
     .estimator-visual {
