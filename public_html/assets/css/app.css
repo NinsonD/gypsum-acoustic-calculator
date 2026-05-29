@@ -459,10 +459,10 @@ label span {
     width: 100%;
     aspect-ratio: 1.55 / 1;
     object-fit: cover;
-    border: 1px solid var(--graphite-100);
-    border-radius: var(--radius);
-    background: var(--graphite-50);
-    box-shadow: var(--shadow-sm);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 .estimator-visual span {
@@ -488,9 +488,9 @@ label span {
 .media-card {
     display: block;
     width: 100%;
-    background: var(--graphite-50);
+    background: transparent;
     object-fit: cover;
-    border-radius: var(--radius);
+    border-radius: 0;
     margin-bottom: 12px;
 }
 
