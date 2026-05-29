@@ -115,8 +115,8 @@ if ($adminUser) {
                         }
                     }
                 ?>
-                <details class="nav-group" <?= $groupActive ? 'open' : ''; ?>>
-                    <summary class="nav-summary <?= $groupActive ? 'active' : ''; ?>"><?= e($group['label']); ?></summary>
+                <div class="nav-group">
+                    <button class="nav-summary <?= $groupActive ? 'active' : ''; ?>" type="button" aria-expanded="false"><?= e($group['label']); ?></button>
                     <div class="nav-menu">
                         <?php foreach ($group['items'] as $path => $label): ?>
                             <a class="<?= $currentPath === $path || ($path === '/admin' && str_starts_with($currentPath, '/admin')) ? 'active' : ''; ?>" href="<?= e(url($path)); ?>"><?= e($label); ?></a>
@@ -128,7 +128,7 @@ if ($adminUser) {
                             </form>
                         <?php endif; ?>
                     </div>
-                </details>
+                </div>
             <?php endforeach; ?>
             <?php if ($adminUser): ?><span class="nav-user"><?= e($adminUser['name']); ?></span><?php endif; ?>
         </nav>

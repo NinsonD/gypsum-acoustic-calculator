@@ -52,8 +52,8 @@ $groups = [
                 }
             }
         ?>
-        <details class="admin-action-group" <?= $groupActive ? 'open' : ''; ?>>
-            <summary class="admin-action-label <?= $groupActive ? 'active' : ''; ?>"><?= e($group['label']); ?></summary>
+        <div class="admin-action-group">
+            <button class="admin-action-label <?= $groupActive ? 'active' : ''; ?>" type="button" aria-expanded="false"><?= e($group['label']); ?></button>
             <div class="admin-action-grid">
                 <?php foreach ($visibleItems as $item): ?>
                     <a class="button <?= ($active ?? '') === $item['key'] ? 'primary' : ''; ?>" href="<?= e(url($item['href'])); ?>"><?= e($item['label']); ?></a>
@@ -65,6 +65,6 @@ $groups = [
                     </form>
                 <?php endif; ?>
             </div>
-        </details>
+        </div>
     <?php endforeach; ?>
 </nav>

@@ -123,6 +123,10 @@ main > * {
 
 .nav-summary,
 .nav a {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    font: inherit;
     list-style: none;
     border-radius: 8px;
     color: var(--graphite-800);
@@ -136,12 +140,8 @@ main > * {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    cursor: pointer;
+    cursor: default;
     user-select: none;
-}
-
-.nav-summary::-webkit-details-marker {
-    display: none;
 }
 
 .nav-summary::after {
@@ -150,8 +150,8 @@ main > * {
     opacity: 0.7;
 }
 
-.nav-summary:hover,
-.nav-group[open] > .nav-summary,
+.nav-group:hover > .nav-summary,
+.nav-group:focus-within > .nav-summary,
 .nav-summary.active,
 .nav a:hover,
 .nav a.active {
@@ -163,7 +163,7 @@ main > * {
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
-    display: grid;
+    display: none;
     gap: 6px;
     min-width: 240px;
     padding: 10px;
@@ -172,6 +172,11 @@ main > * {
     background: rgba(255, 255, 255, 0.98);
     box-shadow: var(--shadow-md);
     z-index: 20;
+}
+
+.nav-group:hover > .nav-menu,
+.nav-group:focus-within > .nav-menu {
+    display: grid;
 }
 
 .nav-menu a,
@@ -631,6 +636,7 @@ thead th {
 }
 
 .admin-action-group {
+    position: relative;
     display: grid;
     gap: 0;
     overflow: hidden;
@@ -640,6 +646,10 @@ thead th {
 }
 
 .admin-action-label {
+    appearance: none;
+    border: 0;
+    background: var(--graphite-50);
+    font: inherit;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -650,13 +660,8 @@ thead th {
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    cursor: pointer;
+    cursor: default;
     user-select: none;
-    background: var(--graphite-50);
-}
-
-.admin-action-label::-webkit-details-marker {
-    display: none;
 }
 
 .admin-action-label::after {
@@ -666,16 +671,35 @@ thead th {
     transform: translateY(-1px);
 }
 
-.admin-action-group[open] > .admin-action-label::after,
+.admin-action-group:hover > .admin-action-label::after,
+.admin-action-group:focus-within > .admin-action-label::after,
 .admin-action-label.active::after {
     transform: translateY(-1px) rotate(180deg);
 }
 
 .admin-action-grid {
-    display: grid;
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 20;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     padding: 12px;
+    border: 1px solid var(--graphite-100);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: var(--shadow-md);
+}
+
+.admin-action-group:hover > .admin-action-grid,
+.admin-action-group:focus-within > .admin-action-grid {
+    display: grid;
+}
+
+.admin-actions .admin-action-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .admin-actions form {
@@ -859,6 +883,7 @@ thead th {
 
     .nav-menu {
         position: static;
+        display: grid;
         width: 100%;
         min-width: 0;
         margin-top: 8px;
@@ -870,7 +895,11 @@ thead th {
     }
 
     .admin-action-grid {
+        position: static;
+        display: grid;
         grid-template-columns: 1fr;
+        margin-top: 8px;
+        box-shadow: none;
     }
 
     .card-grid.two,

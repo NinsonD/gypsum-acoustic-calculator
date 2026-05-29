@@ -379,8 +379,21 @@
         });
     }
 
+    function initHoverMenus() {
+        document.querySelectorAll('.nav-summary, .admin-action-label').forEach(function (toggle) {
+            toggle.addEventListener('mousedown', function (event) {
+                event.preventDefault();
+            });
+
+            toggle.addEventListener('click', function (event) {
+                event.preventDefault();
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-calculator]').forEach(initCalculator);
         document.querySelectorAll('[data-inquiry-form]').forEach(initInquiry);
+        initHoverMenus();
     });
 }());
