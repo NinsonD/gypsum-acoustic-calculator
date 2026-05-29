@@ -1,4 +1,4 @@
-<div class="admin-actions">
+<nav class="admin-actions" aria-label="Admin sections">
     <?php $config = $config ?? app_config(); ?>
     <a class="button <?= ($active ?? '') === 'dashboard' ? 'primary' : ''; ?>" href="<?= e(url('/admin')); ?>">Dashboard</a>
     <?php if (Auth::hasPermission($config, 'leads')): ?>
@@ -26,4 +26,4 @@
         <input type="hidden" name="_csrf" value="<?= e(csrf_token()); ?>">
         <button class="button" type="submit">Logout</button>
     </form>
-</div>
+</nav>
