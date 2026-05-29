@@ -911,6 +911,9 @@ thead th {
         display: none;
         grid-column: 1 / -1;
         width: 100%;
+        margin-top: 6px;
+        padding: 8px 0 2px;
+        border-top: 1px solid var(--graphite-100);
     }
 
     .site-header.nav-open .nav {
@@ -928,11 +931,15 @@ thead th {
 
     .nav-menu {
         position: static;
-        display: grid;
+        display: none;
         width: 100%;
         min-width: 0;
         margin-top: 8px;
         box-shadow: none;
+    }
+
+    .nav-group.nav-open > .nav-menu {
+        display: grid;
     }
 
     .button-row {
@@ -971,7 +978,28 @@ thead th {
     }
 
     table {
-        min-width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    .table-wrap {
+        overflow-x: visible;
+    }
+
+    th,
+    td {
+        padding: 10px 8px;
+        word-break: break-word;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table-actions .button,
+    .table-actions form .button {
+        width: 100%;
     }
 }
 

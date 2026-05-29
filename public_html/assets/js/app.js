@@ -427,14 +427,46 @@
         });
     }
 
-    function initHoverMenus() {
-        document.querySelectorAll('.nav-summary, .admin-action-label').forEach(function (toggle) {
-            toggle.addEventListener('mousedown', function (event) {
-                event.preventDefault();
-            });
+    function initNavMenus() {
+        var mobileQuery = window.matchMedia('(max-width: 680px)');
 
-            toggle.addEventListener('click', function (event) {
-                event.preventDefault();
+        function syncGroup(toggle) {
+            var group = toggle.closest('.nav-group');
+            if (!group) {
+                return;
+            }
+
+            var isOpen = group.classList.contains('nav-open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
+
+        function closeAllGroups() {
+            document.querySelectorAll('.nav-group.nav-open').forEach(function (group) {
+                group.classList.remove('nav-open');
+                var toggle = group.querySelector('.nav-summary');
+                if (toggle) {
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        document.querySelectorAll('.nav-summary').forEach(function (toggle) {
+            syncGroup(toggle);
+
+            toggle.addEventListener('click', function () {
+                var group = toggle.closest('.nav-group');
+                if (!group || !mobileQuery.matches) {
+                    return;
+                }
+
+                var shouldOpen = !group.classList.contains('nav-open');
+                closeAllGroups();
+
+                if (shouldOpen) {
+                    group.classList.add('nav-open');
+                }
+
+                syncGroup(toggle);
             });
         });
     }
@@ -442,6 +474,7 @@
     function initMobileNav() {
         var header = document.querySelector('.site-header');
         var toggle = document.querySelector('.nav-toggle');
+        var defaultLabel = toggle ? toggle.textContent.trim() : 'Menu';
 
         if (!header || !toggle) {
             return;
@@ -450,11 +483,13 @@
         function closeMenu() {
             header.classList.remove('nav-open');
             toggle.setAttribute('aria-expanded', 'false');
+            toggle.textContent = defaultLabel;
         }
 
         toggle.addEventListener('click', function () {
             var isOpen = header.classList.toggle('nav-open');
             toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            toggle.textContent = isOpen ? 'Close' : defaultLabel;
         });
 
         document.querySelectorAll('.nav a, .nav button').forEach(function (item) {
@@ -475,7 +510,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-calculator]').forEach(initCalculator);
         document.querySelectorAll('[data-inquiry-form]').forEach(initInquiry);
-        initHoverMenus();
+        initNavMenus();
         initMobileNav();
     });
 }());
