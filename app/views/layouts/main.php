@@ -66,7 +66,7 @@ $nav = [
     <header class="site-header">
         <a class="brand" href="<?= e(url('/')); ?>" aria-label="Home">
             <img class="brand-logo" src="<?= e(asset('images/logo/main-logo.png')); ?>" alt="Al Namariq Building Materials">
-            <span>
+            <span class="brand-copy">
                 <strong><?= e($config['name']); ?></strong>
                 <small>Building materials</small>
             </span>
