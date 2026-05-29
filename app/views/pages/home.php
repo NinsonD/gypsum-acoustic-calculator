@@ -10,7 +10,7 @@
             <a class="button" href="https://namariqgroup.com/" target="_blank" rel="noreferrer">Company website</a>
         </div>
     </div>
-    <img class="hero-art" src="<?= e(asset('images/hero/system.png')); ?>" alt="Al Namariq gypsum and acoustic engineering systems">
+    <img class="hero-art" src="<?= e(asset('images/hero/system.jpg')); ?>" alt="Al Namariq gypsum and acoustic engineering systems">
 </section>
 
 <?php partial('calculator'); ?>
