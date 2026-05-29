@@ -7,6 +7,7 @@
             <a class="button primary" href="<?= e(url('/calculators')); ?>">Open calculators</a>
             <a class="button" href="<?= e(url('/products')); ?>">Browse products</a>
             <a class="button" href="<?= e(url('/contact')); ?>">Request inquiry</a>
+            <a class="button" href="https://namariqgroup.com/" target="_blank" rel="noreferrer">Company website</a>
         </div>
     </div>
     <div class="technical-visual" aria-label="Ceiling and partition technical visual">
@@ -46,13 +47,15 @@
     <div class="card-grid three">
         <?php foreach ($products as $product): ?>
             <article class="card">
-                <?php if (!empty($product['image'])): ?>
-                    <img class="media-card sm" src="<?= e(url('/' . ltrim((string) $product['image'], '/'))); ?>" alt="<?= e($product['name']); ?>">
-                <?php endif; ?>
-                <p class="tag"><?= e($product['category']); ?></p>
-                <h3><?= e($product['name']); ?></h3>
-                <p><?= e($product['summary']); ?></p>
-                <a href="<?= e(url('/products/' . $product['slug'])); ?>">Technical details</a>
+                <a class="product-card-link" href="https://namariqgroup.ae/" target="_blank" rel="noreferrer">
+                    <?php if (!empty($product['image'])): ?>
+                        <img class="media-card sm" src="<?= e(url('/' . ltrim((string) $product['image'], '/'))); ?>" alt="<?= e($product['name']); ?>">
+                    <?php endif; ?>
+                    <p class="tag"><?= e($product['category']); ?></p>
+                    <h3><?= e($product['name']); ?></h3>
+                    <p><?= e($product['summary']); ?></p>
+                    <span class="button linkish">View on ecommerce site</span>
+                </a>
             </article>
         <?php endforeach; ?>
     </div>

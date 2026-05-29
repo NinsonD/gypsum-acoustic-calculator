@@ -49,6 +49,7 @@ $navGroups = [
         'label' => 'Company',
         'items' => [
             '/contact' => 'Contact',
+            'https://namariqgroup.com/' => 'Company website',
         ],
     ],
 ];
@@ -119,7 +120,8 @@ if ($adminUser) {
                     <button class="nav-summary <?= $groupActive ? 'active' : ''; ?>" type="button" aria-expanded="false"><?= e($group['label']); ?></button>
                     <div class="nav-menu">
                         <?php foreach ($group['items'] as $path => $label): ?>
-                            <a class="<?= $currentPath === $path || ($path === '/admin' && str_starts_with($currentPath, '/admin')) ? 'active' : ''; ?>" href="<?= e(url($path)); ?>"><?= e($label); ?></a>
+                            <?php $isExternal = str_starts_with($path, 'http://') || str_starts_with($path, 'https://'); ?>
+                            <a class="<?= !$isExternal && ($currentPath === $path || ($path === '/admin' && str_starts_with($currentPath, '/admin'))) ? 'active' : ''; ?>" href="<?= e($isExternal ? $path : url($path)); ?>"<?= $isExternal ? ' target="_blank" rel="noreferrer"' : ''; ?>><?= e($label); ?></a>
                         <?php endforeach; ?>
                         <?php if (!empty($group['logout'])): ?>
                             <form method="post" action="<?= e(url('/admin/logout')); ?>" class="nav-logout">
@@ -148,6 +150,7 @@ if ($adminUser) {
             <a href="<?= e(url('/products')); ?>">Product catalog</a>
             <a href="<?= e(url('/blog')); ?>">Blog</a>
             <a href="<?= e(url('/gallery')); ?>">Gallery</a>
+            <a href="https://namariqgroup.com/" target="_blank" rel="noreferrer">Company website</a>
             <a href="<?= e(url('/admin')); ?>">Admin structure</a>
         </div>
     </footer>

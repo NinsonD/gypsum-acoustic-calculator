@@ -20,5 +20,9 @@
         <?php foreach ($product['specs'] as $label => $value): ?>
             <div class="spec-row"><strong><?= e($label); ?></strong><span><?= e($value); ?></span></div>
         <?php endforeach; ?>
+        <div class="button-row" style="margin-top: 18px;">
+            <a class="button primary" href="https://namariqgroup.ae/" target="_blank" rel="noreferrer">View on ecommerce site</a>
+            <a class="button" href="https://namariqgroup.com/" target="_blank" rel="noreferrer">Company website</a>
+        </div>
     </article>
 </section>
