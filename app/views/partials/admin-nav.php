@@ -1,52 +1,70 @@
 <?php $config = $config ?? app_config(); ?>
-<nav class="admin-actions" aria-label="Admin sections">
-    <section class="admin-action-group">
-        <span class="admin-action-label">Overview</span>
-        <div class="admin-action-grid">
-            <a class="button <?= ($active ?? '') === 'dashboard' ? 'primary' : ''; ?>" href="<?= e(url('/admin')); ?>">Dashboard</a>
-            <?php if (Auth::hasPermission($config, 'leads')): ?>
-                <a class="button <?= ($active ?? '') === 'inquiries' ? 'primary' : ''; ?>" href="<?= e(url('/admin/inquiries')); ?>">Inquiries</a>
-                <a class="button <?= ($active ?? '') === 'boqs' ? 'primary' : ''; ?>" href="<?= e(url('/admin/boqs')); ?>">BOQs</a>
-            <?php endif; ?>
-        </div>
-    </section>
+<?php
+$groups = [
+    [
+        'label' => 'Overview',
+        'items' => [
+            ['key' => 'dashboard', 'label' => 'Dashboard', 'href' => '/admin'],
+            ['key' => 'inquiries', 'label' => 'Inquiries', 'href' => '/admin/inquiries', 'permission' => 'leads'],
+            ['key' => 'boqs', 'label' => 'BOQs', 'href' => '/admin/boqs', 'permission' => 'leads'],
+        ],
+    ],
+    [
+        'label' => 'Catalog',
+        'items' => [
+            ['key' => 'products', 'label' => 'Products', 'href' => '/admin/products', 'permission' => 'products'],
+            ['key' => 'brands', 'label' => 'Brands', 'href' => '/admin/brands', 'permission' => 'products'],
+            ['key' => 'categories', 'label' => 'Categories', 'href' => '/admin/categories', 'permission' => 'products'],
+        ],
+    ],
+    [
+        'label' => 'Content',
+        'items' => [
+            ['key' => 'blogs', 'label' => 'Blogs', 'href' => '/admin/blogs', 'permission' => 'blog'],
+            ['key' => 'downloads', 'label' => 'Downloads', 'href' => '/admin/downloads', 'permission' => 'downloads'],
+            ['key' => 'gallery', 'label' => 'Gallery', 'href' => '/admin/gallery', 'permission' => 'gallery'],
+        ],
+    ],
+    [
+        'label' => 'System',
+        'items' => [
+            ['key' => 'users', 'label' => 'Users', 'href' => '/admin/users', 'permission' => 'users'],
+        ],
+    ],
+];
+?>
+<nav class="admin-actions admin-actions-dropdown" aria-label="Admin sections">
+    <?php foreach ($groups as $group): ?>
+        <?php
+            $visibleItems = array_filter($group['items'], static function (array $item) use ($config): bool {
+                return !isset($item['permission']) || Auth::hasPermission($config, $item['permission']);
+            });
 
-    <section class="admin-action-group">
-        <span class="admin-action-label">Catalog</span>
-        <div class="admin-action-grid">
-            <?php if (Auth::hasPermission($config, 'products')): ?>
-                <a class="button <?= ($active ?? '') === 'products' ? 'primary' : ''; ?>" href="<?= e(url('/admin/products')); ?>">Products</a>
-                <a class="button <?= ($active ?? '') === 'brands' ? 'primary' : ''; ?>" href="<?= e(url('/admin/brands')); ?>">Brands</a>
-                <a class="button <?= ($active ?? '') === 'categories' ? 'primary' : ''; ?>" href="<?= e(url('/admin/categories')); ?>">Categories</a>
-            <?php endif; ?>
-        </div>
-    </section>
+            if ($visibleItems === []) {
+                continue;
+            }
 
-    <section class="admin-action-group">
-        <span class="admin-action-label">Content</span>
-        <div class="admin-action-grid">
-            <?php if (Auth::hasPermission($config, 'blog')): ?>
-                <a class="button <?= ($active ?? '') === 'blogs' ? 'primary' : ''; ?>" href="<?= e(url('/admin/blogs')); ?>">Blogs</a>
-            <?php endif; ?>
-            <?php if (Auth::hasPermission($config, 'downloads')): ?>
-                <a class="button <?= ($active ?? '') === 'downloads' ? 'primary' : ''; ?>" href="<?= e(url('/admin/downloads')); ?>">Downloads</a>
-            <?php endif; ?>
-            <?php if (Auth::hasPermission($config, 'gallery')): ?>
-                <a class="button <?= ($active ?? '') === 'gallery' ? 'primary' : ''; ?>" href="<?= e(url('/admin/gallery')); ?>">Gallery</a>
-            <?php endif; ?>
-        </div>
-    </section>
-
-    <section class="admin-action-group">
-        <span class="admin-action-label">System</span>
-        <div class="admin-action-grid">
-            <?php if (Auth::hasPermission($config, 'users')): ?>
-                <a class="button <?= ($active ?? '') === 'users' ? 'primary' : ''; ?>" href="<?= e(url('/admin/users')); ?>">Users</a>
-            <?php endif; ?>
-            <form method="post" action="<?= e(url('/admin/logout')); ?>">
-                <input type="hidden" name="_csrf" value="<?= e(csrf_token()); ?>">
-                <button class="button" type="submit">Logout</button>
-            </form>
-        </div>
-    </section>
+            $groupActive = false;
+            foreach ($visibleItems as $item) {
+                if (($active ?? '') === $item['key']) {
+                    $groupActive = true;
+                    break;
+                }
+            }
+        ?>
+        <details class="admin-action-group" <?= $groupActive ? 'open' : ''; ?>>
+            <summary class="admin-action-label <?= $groupActive ? 'active' : ''; ?>"><?= e($group['label']); ?></summary>
+            <div class="admin-action-grid">
+                <?php foreach ($visibleItems as $item): ?>
+                    <a class="button <?= ($active ?? '') === $item['key'] ? 'primary' : ''; ?>" href="<?= e(url($item['href'])); ?>"><?= e($item['label']); ?></a>
+                <?php endforeach; ?>
+                <?php if ($group['label'] === 'System'): ?>
+                    <form method="post" action="<?= e(url('/admin/logout')); ?>" class="admin-logout">
+                        <input type="hidden" name="_csrf" value="<?= e(csrf_token()); ?>">
+                        <button class="button" type="submit">Logout</button>
+                    </form>
+                <?php endif; ?>
+            </div>
+        </details>
+    <?php endforeach; ?>
 </nav>

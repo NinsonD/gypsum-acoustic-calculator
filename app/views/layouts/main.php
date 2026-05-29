@@ -27,17 +27,50 @@ $organizationSchema = [
     'url' => $config['url'],
     'description' => $pageDescription,
 ];
-$nav = [
-    '/calculators' => 'Calculators',
-    '/products' => 'Products',
-    '/blog' => 'Blog',
-    '/installation' => 'Installation',
-    '/gallery' => 'Gallery',
-    '/knowledge' => 'Knowledge',
-    '/downloads' => 'Downloads',
-    '/contact' => 'Contact',
-    '/admin' => 'Admin',
+$navGroups = [
+    [
+        'label' => 'Explore',
+        'items' => [
+            '/calculators' => 'Calculators',
+            '/products' => 'Products',
+            '/gallery' => 'Gallery',
+        ],
+    ],
+    [
+        'label' => 'Resources',
+        'items' => [
+            '/blog' => 'Blog',
+            '/installation' => 'Installation',
+            '/knowledge' => 'Knowledge',
+            '/downloads' => 'Downloads',
+        ],
+    ],
+    [
+        'label' => 'Company',
+        'items' => [
+            '/contact' => 'Contact',
+        ],
+    ],
 ];
+
+if ($adminUser) {
+    $navGroups[] = [
+        'label' => 'Admin',
+        'items' => [
+            '/admin' => 'Dashboard',
+            '/admin/inquiries' => 'Inquiries',
+            '/admin/boqs' => 'BOQs',
+            '/admin/products' => 'Products',
+            '/admin/brands' => 'Brands',
+            '/admin/categories' => 'Categories',
+            '/admin/blogs' => 'Blogs',
+            '/admin/downloads' => 'Downloads',
+            '/admin/gallery' => 'Gallery',
+            '/admin/users' => 'Users',
+        ],
+        'logout' => true,
+    ];
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -72,12 +105,32 @@ $nav = [
             </span>
         </a>
         <nav class="nav" aria-label="Primary navigation">
-            <?php foreach ($nav as $path => $label): ?>
-                <a class="<?= $currentPath === $path || ($path === '/admin' && str_starts_with($currentPath, '/admin')) ? 'active' : ''; ?>" href="<?= e(url($path)); ?>"><?= e($label); ?></a>
+            <?php foreach ($navGroups as $group): ?>
+                <?php
+                    $groupActive = false;
+                    foreach ($group['items'] as $path => $label) {
+                        if ($currentPath === $path || ($path === '/admin' && str_starts_with($currentPath, '/admin'))) {
+                            $groupActive = true;
+                            break;
+                        }
+                    }
+                ?>
+                <details class="nav-group" <?= $groupActive ? 'open' : ''; ?>>
+                    <summary class="nav-summary <?= $groupActive ? 'active' : ''; ?>"><?= e($group['label']); ?></summary>
+                    <div class="nav-menu">
+                        <?php foreach ($group['items'] as $path => $label): ?>
+                            <a class="<?= $currentPath === $path || ($path === '/admin' && str_starts_with($currentPath, '/admin')) ? 'active' : ''; ?>" href="<?= e(url($path)); ?>"><?= e($label); ?></a>
+                        <?php endforeach; ?>
+                        <?php if (!empty($group['logout'])): ?>
+                            <form method="post" action="<?= e(url('/admin/logout')); ?>" class="nav-logout">
+                                <input type="hidden" name="_csrf" value="<?= e(csrf_token()); ?>">
+                                <button type="submit">Logout</button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
+                </details>
             <?php endforeach; ?>
-            <?php if ($adminUser): ?>
-                <span class="nav-user"><?= e($adminUser['name']); ?></span>
-            <?php endif; ?>
+            <?php if ($adminUser): ?><span class="nav-user"><?= e($adminUser['name']); ?></span><?php endif; ?>
         </nav>
     </header>
 
