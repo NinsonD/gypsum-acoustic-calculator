@@ -439,9 +439,43 @@
         });
     }
 
+    function initMobileNav() {
+        var header = document.querySelector('.site-header');
+        var toggle = document.querySelector('.nav-toggle');
+
+        if (!header || !toggle) {
+            return;
+        }
+
+        function closeMenu() {
+            header.classList.remove('nav-open');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+
+        toggle.addEventListener('click', function () {
+            var isOpen = header.classList.toggle('nav-open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        document.querySelectorAll('.nav a, .nav button').forEach(function (item) {
+            item.addEventListener('click', function () {
+                if (window.matchMedia('(max-width: 680px)').matches) {
+                    closeMenu();
+                }
+            });
+        });
+
+        window.addEventListener('resize', function () {
+            if (!window.matchMedia('(max-width: 680px)').matches) {
+                closeMenu();
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-calculator]').forEach(initCalculator);
         document.querySelectorAll('[data-inquiry-form]').forEach(initInquiry);
         initHoverMenus();
+        initMobileNav();
     });
 }());

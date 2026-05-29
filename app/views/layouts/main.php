@@ -105,7 +105,10 @@ if ($adminUser) {
                 <small>Building materials</small>
             </span>
         </a>
-        <nav class="nav" aria-label="Primary navigation">
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+            Menu
+        </button>
+        <nav class="nav" id="primary-navigation" aria-label="Primary navigation">
             <?php foreach ($navGroups as $group): ?>
                 <?php
                     $groupActive = false;

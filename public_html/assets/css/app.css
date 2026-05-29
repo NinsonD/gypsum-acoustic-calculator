@@ -76,6 +76,21 @@ main > * {
     box-shadow: 0 1px 0 rgba(17, 24, 32, 0.03);
 }
 
+.nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    border: 1px solid var(--graphite-100);
+    border-radius: var(--radius);
+    background: var(--white);
+    color: var(--graphite-900);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    padding: 10px 14px;
+}
+
 .brand {
     display: flex;
     align-items: center;
@@ -844,6 +859,11 @@ thead th {
 }
 
 @media (max-width: 680px) {
+    .site-header {
+        grid-template-columns: 1fr auto;
+        align-items: start;
+    }
+
     .site-header,
     .site-footer {
         align-items: flex-start;
@@ -855,6 +875,12 @@ thead th {
 
     .brand {
         min-width: 0;
+        max-width: calc(100% - 88px);
+    }
+
+    .nav-toggle {
+        display: inline-flex;
+        justify-self: end;
     }
 
     .hero {
@@ -882,7 +908,13 @@ thead th {
     }
 
     .nav {
+        display: none;
+        grid-column: 1 / -1;
         width: 100%;
+    }
+
+    .site-header.nav-open .nav {
+        display: grid;
     }
 
     .nav-group {
@@ -944,12 +976,20 @@ thead th {
 }
 
 @media (max-width: 480px) {
+    .site-header {
+        gap: 10px;
+    }
+
     .admin-action-grid {
         grid-template-columns: 1fr;
     }
 
     .nav-summary {
         font-size: 13px;
+    }
+
+    .nav-toggle {
+        padding: 9px 12px;
     }
 
     .brand strong {
