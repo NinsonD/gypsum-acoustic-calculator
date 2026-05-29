@@ -10,18 +10,7 @@
             <a class="button" href="https://namariqgroup.com/" target="_blank" rel="noreferrer">Company website</a>
         </div>
     </div>
-    <div class="technical-visual" aria-label="Ceiling and partition technical visual">
-        <div class="slab"></div>
-        <div class="hanger h1"></div>
-        <div class="hanger h2"></div>
-        <div class="hanger h3"></div>
-        <div class="main-channel"></div>
-        <div class="furring"></div>
-        <div class="board"></div>
-        <div class="partition">
-            <span></span><strong></strong><span></span>
-        </div>
-    </div>
+    <img class="hero-art" src="<?= e(asset('images/hero/system.png')); ?>" alt="Al Namariq gypsum and acoustic engineering systems">
 </section>
 
 <?php partial('calculator'); ?>
@@ -54,7 +43,7 @@
                     <p class="tag"><?= e($product['category']); ?></p>
                     <h3><?= e($product['name']); ?></h3>
                     <p><?= e($product['summary']); ?></p>
-                    <span class="button linkish">View on ecommerce site</span>
+                    <span class="button linkish">View on Online Shop</span>
                 </a>
             </article>
         <?php endforeach; ?>

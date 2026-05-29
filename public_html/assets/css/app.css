@@ -226,7 +226,7 @@ main > * {
 
 .hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 430px;
+    grid-template-columns: minmax(0, 0.95fr) minmax(460px, 1.05fr);
     gap: 28px;
     padding-top: 10px;
     padding-bottom: 8px;
@@ -272,97 +272,13 @@ label span {
     text-transform: uppercase;
 }
 
-.technical-visual {
-    position: relative;
-    min-height: 330px;
-    overflow: hidden;
-    border: 1px solid var(--graphite-100);
-    border-radius: 8px;
-    background:
-        linear-gradient(90deg, rgba(38, 120, 200, 0.08) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(38, 120, 200, 0.08) 1px, transparent 1px),
-        var(--white);
-    background-size: 24px 24px;
-    box-shadow: 0 18px 45px rgba(17, 24, 32, 0.10);
-}
-
-.technical-visual div {
-    position: absolute;
-    border-radius: 4px;
-}
-
-.slab {
-    top: 46px;
-    left: 44px;
-    right: 44px;
-    height: 18px;
-    background: var(--graphite-800);
-}
-
-.hanger {
-    top: 64px;
-    width: 4px;
-    height: 78px;
-    background: var(--graphite-600);
-}
-
-.h1 { left: 28%; }
-.h2 { left: 50%; }
-.h3 { left: 72%; }
-
-.main-channel {
-    top: 138px;
-    left: 64px;
-    right: 64px;
-    height: 13px;
-    background: var(--blue-500);
-}
-
-.furring {
-    top: 188px;
-    left: 82px;
-    right: 82px;
-    height: 13px;
-    background: var(--copper-500);
-}
-
-.board {
-    top: 220px;
-    left: 62px;
-    right: 62px;
-    height: 30px;
-    border: 3px solid var(--blue-700);
-    background: var(--white);
-}
-
-.partition {
-    left: 43%;
-    bottom: 22px;
-    width: 92px;
-    height: 112px;
-    border: 3px solid var(--graphite-800);
-    background: var(--white);
-}
-
-.partition span,
-.partition strong {
+.hero-art {
     display: block;
-    position: absolute;
-    top: 12px;
-    bottom: 12px;
-}
-
-.partition span {
-    width: 18px;
-    background: var(--blue-50);
-}
-
-.partition span:first-child { left: 9px; }
-.partition span:last-child { right: 9px; }
-.partition strong {
-    left: 35px;
-    width: 18px;
-    background: var(--copper-100);
+    width: 100%;
+    height: auto;
+    max-height: 840px;
+    object-fit: contain;
+    object-position: center right;
 }
 
 .panel,
@@ -896,6 +812,11 @@ thead th {
         grid-template-columns: 1fr;
     }
 
+    .hero-art {
+        max-height: 620px;
+        object-position: center;
+    }
+
     .card-grid.three,
     .card-grid.four,
     .form-grid,
@@ -921,6 +842,10 @@ thead th {
 
     .brand {
         min-width: 0;
+    }
+
+    .hero {
+        gap: 18px;
     }
 
     .estimator-header {
