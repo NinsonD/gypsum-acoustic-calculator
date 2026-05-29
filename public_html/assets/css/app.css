@@ -161,7 +161,7 @@ main > * {
 
 .nav-menu {
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% - 1px);
     right: 0;
     display: none;
     gap: 6px;
@@ -680,7 +680,7 @@ thead th {
 .admin-action-grid {
     display: none;
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% - 1px);
     left: 0;
     right: 0;
     z-index: 20;
