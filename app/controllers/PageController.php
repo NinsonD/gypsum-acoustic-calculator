@@ -23,13 +23,13 @@ final class PageController extends Controller
     public function home(): void
     {
         $this->view('pages/home', [
-            'title' => 'Gypsum & Acoustic Engineering Systems',
+            'title' => $this->config['name'],
             'description' => 'Gypsum ceiling, drywall partition, acoustic calculator, BOQ, and contractor lead platform.',
             'products' => array_slice($this->catalogProducts(), 0, 3),
             'schema' => [
                 '@context' => 'https://schema.org',
                 '@type' => 'WebPage',
-                'name' => 'Gypsum & Acoustic Engineering Systems',
+                'name' => $this->config['name'],
                 'description' => 'Gypsum ceiling, drywall partition, acoustic calculator, BOQ, and contractor lead platform.',
                 'url' => url('/'),
             ],

@@ -1,7 +1,7 @@
 <section class="hero">
     <div class="hero-copy">
         <p class="eyebrow">UAE/GCC construction engineering platform</p>
-        <h1>Gypsum & Acoustic Engineering Systems</h1>
+        <h1><?= e($config['name']); ?></h1>
         <p>Material estimators, BOQ generation, installation references, acoustic guidance, product data, and contractor inquiry routing in a clean cPanel-ready PHP structure.</p>
         <div class="button-row">
             <a class="button primary" href="<?= e(url('/calculators')); ?>">Open calculators</a>

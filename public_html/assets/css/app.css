@@ -80,19 +80,20 @@ main > * {
     display: flex;
     align-items: center;
     gap: 12px;
-    min-width: 240px;
+    min-width: 320px;
     color: var(--graphite-900);
 }
 
-.brand-mark {
-    display: grid;
-    width: 42px;
-    height: 42px;
-    place-items: center;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--graphite-900), var(--blue-700));
-    color: var(--white);
-    font-weight: 800;
+.brand-logo {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+.brand strong {
+    display: block;
+    line-height: 1.15;
 }
 
 .brand small {
@@ -709,6 +710,10 @@ thead th {
 
     .admin-heading {
         padding-top: 28px;
+    }
+
+    .brand {
+        min-width: 0;
     }
 
     .admin-actions {

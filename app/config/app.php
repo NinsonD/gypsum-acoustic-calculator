@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'name' => 'Gypsum & Acoustic Engineering Systems',
+    'name' => 'Al Namariq Gypsum & Acoustic Engineering Systems',
     'env' => env('APP_ENV', 'production'),
     'debug' => filter_var(env('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN),
     'url' => rtrim((string) env('APP_URL', ''), '/'),

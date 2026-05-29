@@ -65,10 +65,10 @@ $nav = [
 <body data-base-path="<?= e(base_path()); ?>">
     <header class="site-header">
         <a class="brand" href="<?= e(url('/')); ?>" aria-label="Home">
-            <span class="brand-mark">GA</span>
+            <img class="brand-logo" src="<?= e(asset('images/logo/main-logo.png')); ?>" alt="Al Namariq Building Materials">
             <span>
-                <strong>Gypsum & Acoustic</strong>
-                <small>Engineering systems</small>
+                <strong><?= e($config['name']); ?></strong>
+                <small>Building materials</small>
             </span>
         </a>
         <nav class="nav" aria-label="Primary navigation">
