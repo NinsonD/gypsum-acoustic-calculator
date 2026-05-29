@@ -429,6 +429,45 @@ label span {
     margin-top: 20px;
 }
 
+.estimator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.estimator-header > div:first-child {
+    min-width: 0;
+}
+
+.estimator-visual {
+    display: grid;
+    gap: 8px;
+    align-items: start;
+    justify-items: end;
+    width: min(260px, 100%);
+    margin-left: auto;
+}
+
+.estimator-visual img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1.25 / 1;
+    object-fit: cover;
+    border: 1px solid var(--graphite-100);
+    border-radius: var(--radius);
+    background: var(--graphite-50);
+    box-shadow: var(--shadow-sm);
+}
+
+.estimator-visual span {
+    color: var(--graphite-600);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
 .calculator-form,
 .contact-form {
     display: grid;
@@ -877,6 +916,16 @@ thead th {
 
     .brand {
         min-width: 0;
+    }
+
+    .estimator-header {
+        flex-direction: column;
+    }
+
+    .estimator-visual {
+        width: 100%;
+        justify-items: start;
+        margin-left: 0;
     }
 
     .nav {

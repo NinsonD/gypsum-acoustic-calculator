@@ -217,13 +217,58 @@
         var mode = form.elements.mode;
         var tileSystem = form.elements.tile_system;
         var status = root.querySelector('[data-calculator-status]');
+        var previewImage = root.querySelector('[data-system-preview]');
+        var previewCaption = root.querySelector('[data-system-caption]');
         var currentResult = null;
         var exportButtons = root.querySelectorAll('[data-export-boq]');
+
+        var systemPreviewMap = {
+            ceiling: {
+                src: endpoint('/assets/images/systems/furring-system.jpg'),
+                alt: 'Furring system preview',
+                caption: 'Furring system'
+            },
+            partition: {
+                src: endpoint('/assets/images/systems/partition-system.jpg'),
+                alt: 'Partition system preview',
+                caption: 'Partition system'
+            },
+            tile: {
+                src: endpoint('/assets/images/systems/ceiling-tile-system.jpg'),
+                alt: 'Ceiling tile system preview',
+                caption: 'Ceiling tile system'
+            },
+            acoustic: {
+                src: endpoint('/assets/images/systems/room-acoustic-treatment.jpg'),
+                alt: 'Room acoustic treatment preview',
+                caption: 'Room acoustic treatment'
+            }
+        };
 
         function updateSections() {
             root.querySelectorAll('[data-section]').forEach(function (section) {
                 section.classList.toggle('is-hidden', section.getAttribute('data-section') !== mode.value);
             });
+        }
+
+        function updatePreview() {
+            var preview = systemPreviewMap[mode.value] || systemPreviewMap.ceiling;
+            var caption = preview.caption;
+            var alt = preview.alt;
+
+            if (mode.value === 'tile' && tileSystem) {
+                caption = tileSystem.value === 'clip-in' ? 'Clip In ceiling tile system' : 'Lay In ceiling tile system';
+                alt = caption + ' preview';
+            }
+
+            if (previewImage) {
+                previewImage.src = preview.src;
+                previewImage.alt = alt;
+            }
+
+            if (previewCaption) {
+                previewCaption.textContent = caption;
+            }
         }
 
         function calculate() {
@@ -235,11 +280,13 @@
 
         mode.addEventListener('change', function () {
             updateSections();
+            updatePreview();
             calculate();
         });
 
         if (tileSystem) {
             tileSystem.addEventListener('change', function () {
+                updatePreview();
                 if (mode.value === 'tile') {
                     calculate();
                 }
@@ -353,6 +400,7 @@
         });
 
         updateSections();
+        updatePreview();
         calculate();
     }
 

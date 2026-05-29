@@ -1,7 +1,17 @@
 <section class="panel calculator-panel" data-calculator>
-    <div class="panel-heading">
-        <p class="eyebrow">Estimator</p>
-        <h2>Material calculator and BOQ preview</h2>
+    <div class="panel-heading estimator-header">
+        <div>
+            <p class="eyebrow">Estimator</p>
+            <h2>Material calculator and BOQ preview</h2>
+        </div>
+        <div class="estimator-visual">
+            <img
+                data-system-preview
+                src="<?= e(asset('images/systems/furring-system.jpg')); ?>"
+                alt="Furring system preview"
+            >
+            <span data-system-caption>Furring system</span>
+        </div>
     </div>
 
     <form class="calculator-form">
