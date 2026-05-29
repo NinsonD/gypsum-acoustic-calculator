@@ -56,7 +56,7 @@ main {
 }
 
 main > * {
-    width: min(1180px, calc(100vw - 36px));
+    width: min(1180px, calc(100% - 36px));
     margin-left: auto;
     margin-right: auto;
 }
@@ -544,8 +544,8 @@ thead th {
 .admin-heading {
     display: grid;
     gap: 14px;
-    padding-top: 34px;
-    padding-bottom: 18px;
+    padding-top: 32px;
+    padding-bottom: 16px;
 }
 
 .admin-heading h1 {
@@ -556,12 +556,30 @@ thead th {
 
 .admin-actions {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 8px;
+    gap: 14px;
     padding: 10px;
     border: 1px solid var(--graphite-100);
     border-radius: var(--radius);
     background: rgba(245, 247, 248, 0.92);
+}
+
+.admin-action-group {
+    display: grid;
+    gap: 8px;
+}
+
+.admin-action-label {
+    color: var(--graphite-600);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.admin-action-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
 }
 
 .admin-actions form {
@@ -572,6 +590,7 @@ thead th {
 .admin-actions .button,
 .admin-actions form .button {
     width: 100%;
+    min-height: 44px;
 }
 
 .admin-heading > div {
@@ -692,8 +711,8 @@ thead th {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .admin-actions {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+    .admin-action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -717,7 +736,11 @@ thead th {
     }
 
     .admin-actions {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .admin-action-grid {
+        grid-template-columns: 1fr;
     }
 
     .card-grid.two,
@@ -735,7 +758,7 @@ thead th {
 }
 
 @media (max-width: 480px) {
-    .admin-actions {
+    .admin-action-grid {
         grid-template-columns: 1fr;
     }
 }
