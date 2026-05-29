@@ -445,14 +445,14 @@ label span {
     gap: 8px;
     align-items: start;
     justify-items: end;
-    width: min(260px, 100%);
+    width: min(360px, 100%);
     margin-left: auto;
 }
 
 .estimator-visual img {
     display: block;
     width: 100%;
-    aspect-ratio: 1.25 / 1;
+    aspect-ratio: 1.55 / 1;
     object-fit: cover;
     border: 1px solid var(--graphite-100);
     border-radius: var(--radius);
@@ -926,6 +926,11 @@ thead th {
         width: 100%;
         justify-items: start;
         margin-left: 0;
+    }
+
+    .estimator-visual img {
+        aspect-ratio: 1.8 / 1;
+        max-height: 260px;
     }
 
     .nav {
